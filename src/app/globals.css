@@ -1,42 +1,106 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* ========== LIGHT THEME ========== */
+
+  /* 🔵 Primary (Blue) Colors */
+  --bg-color-primary: var(--gray-1);
+  --bg-color-secondary: var(--blue-2);
+
+  --bg-color-subtle-primaey: var(--gray-2);
+  --bg-color-subtle-secondary: var(--blue-2);
+
+  --bg-color-element-primary: var(--gray-3);
+  --bg-color-element-hover-primary: var(--gray-4);
+  --bg-color-element-active-primary: var(--gray-5);
+
+  --bg-color-element-secondary: var(--blue-3);
+  --bg-color-element-hover-secondary: var(--blue-4);
+  --bg-color-element-active-secondary: var(--blue-5);
+
+  /* Borders */
+  --border-color-subtle-primary: var(--gray-6);
+  --border-color-primary: var(--gray-7);
+  --border-color-hover-primary: var(--gray-8);
+
+  --border-color-subtle-secondary: var(--blue-6);
+  --border-color-secondary: var(--blue-7);
+  --border-color-hover-secondary: var(--blue-8);
+
+  /* Solid Backgrounds */
+  --bg-color-solid-primary: var(--gray-9);
+  --bg-color-solid-hover-primary: var(--gray-10);
+
+  --bg-color-solid-secondary: var(--blue-9);
+  --bg-color-solid-hover-secondary: var(--blue-10);
+
+  /* ⚫ Text Colors */
+  --text-color-light-primary: var(--gray-11);
+  --text-color-dark-primary: var(--gray-12);
+
+  --text-color-light-secondary: var(--blue-11);
+  --text-color-dark-secondary: var(--blue-12);
+
+  /* Shadows */
+  --shadow-sm-primary: 0px 1px 2px rgba(0, 0, 0, 0.08),
+    0px 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md-primary: 0px 4px 6px rgba(0, 0, 0, 0.12),
+    0px 2px 4px rgba(0, 0, 0, 0.08);
+  --shadow-lg-primary: 0px 10px 20px rgba(0, 0, 0, 0.15),
+    0px 4px 8px rgba(0, 0, 0, 0.1);
+
+  --shadow-sm-secondary: 0px 1px 2px rgba(2, 82, 204, 0.12),
+    0px 1px 3px rgba(2, 82, 204, 0.08);
+  --shadow-md-secondary: 0px 4px 6px rgba(2, 82, 204, 0.16),
+    0px 2px 4px rgba(2, 82, 204, 0.1);
+  --shadow-lg-secondary: 0px 10px 20px rgba(2, 82, 204, 0.18),
+    0px 4px 8px rgba(2, 82, 204, 0.12);
+
+  --contrast-primary: #ffffff;
+  --surface-primary: #ffffffcc;
+  --indicator-primary: #8f8c8c;
+  --track-primary: #8f8c8c;
+
+  --contrast-secondary: #fff;
+  --surface-secondary: #eff8ffcc;
+  --indicator-secondary: #0d27ab;
+  --track-secondary: #0d27ab;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ========== DARK THEME ========== */
+.dark-theme {
+  --color-background: var(--blue-12);
+  --color-subtle-bg: var(--blue-11);
+
+  --color-ui-element-bg: var(--blue-10);
+  --color-ui-element-bg-hover: var(--blue-9);
+  --color-ui-element-bg-active: var(--blue-8);
+
+  /* Borders */
+  --color-border-subtle: var(--blue-7);
+  --color-border: var(--blue-6);
+  --color-border-hover: var(--blue-5);
+
+  /* Solid Backgrounds */
+  --color-solid-bg: var(--blue-4);
+  --color-solid-bg-hover: var(--blue-3);
+
+  /* ⚫ Text (Gray) Colors */
+  --color-text-muted: var(--gray-3);
+  --color-text: var(--gray-1);
+
+  /* Shadows */
+  --shadow-sm: 0px 1px 3px rgba(255, 255, 255, 0.1);
+  --shadow-md: 0px 3px 6px rgba(255, 255, 255, 0.15);
+  --shadow-lg: 0px 6px 12px rgba(255, 255, 255, 0.2);
 }
 
-html,
 body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
+  padding: 0;
+  color: var(--text-color-light-primary);
+  font-family: var(--font-primary);
 }
 
-a {
+body * {
   color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+  font-family: inherit;
 }
