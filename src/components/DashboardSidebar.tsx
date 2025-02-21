@@ -119,7 +119,7 @@ const DashboardSideBar = () => {
           <ListItem>
             <Link href="/dashboard/buckets">
               <FoldersIcon />
-              <span>Buckets</span>
+              <span>Bucket Manager</span>
             </Link>
           </ListItem>
 

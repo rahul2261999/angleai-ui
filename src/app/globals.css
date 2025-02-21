@@ -5,7 +5,7 @@
   --bg-color-primary: var(--gray-1);
   --bg-color-secondary: var(--blue-2);
 
-  --bg-color-subtle-primaey: var(--gray-2);
+  --bg-color-subtle-primay: var(--gray-2);
   --bg-color-subtle-secondary: var(--blue-2);
 
   --bg-color-element-primary: var(--gray-3);
@@ -40,19 +40,19 @@
   --text-color-dark-secondary: var(--blue-12);
 
   /* Shadows */
-  --shadow-sm-primary: 0px 1px 2px rgba(0, 0, 0, 0.08),
-    0px 1px 3px rgba(0, 0, 0, 0.05);
-  --shadow-md-primary: 0px 4px 6px rgba(0, 0, 0, 0.12),
-    0px 2px 4px rgba(0, 0, 0, 0.08);
-  --shadow-lg-primary: 0px 10px 20px rgba(0, 0, 0, 0.15),
-    0px 4px 8px rgba(0, 0, 0, 0.1);
+  --shadow-sm-primary: 0px 1px 2px var(--border-color-subtle-primary),
+    0px 1px 3px var(--border-color-subtle-primary);
+  --shadow-md-primary: 0px 4px 6px var(--border-color-subtle-primary),
+    0px 2px 4px var(--border-color-subtle-primary);
+  --shadow-lg-primary: 0px 10px 20px var(--border-color-subtle-primary),
+    0px 4px 8px var(--border-color-subtle-primary);
 
-  --shadow-sm-secondary: 0px 1px 2px rgba(2, 82, 204, 0.12),
-    0px 1px 3px rgba(2, 82, 204, 0.08);
-  --shadow-md-secondary: 0px 4px 6px rgba(2, 82, 204, 0.16),
-    0px 2px 4px rgba(2, 82, 204, 0.1);
-  --shadow-lg-secondary: 0px 10px 20px rgba(2, 82, 204, 0.18),
-    0px 4px 8px rgba(2, 82, 204, 0.12);
+  --shadow-sm-secondary: 0px 1px 2px var(--border-color-subtle-secondary),
+    0px 1px 3px var(--border-color-subtle-secondary);
+  --shadow-md-secondary: 0px 4px 6px var(--border-color-subtle-secondary),
+    0px 2px 4px var(--border-color-subtle-secondary);
+  --shadow-lg-secondary: 0px 10px 20px var(--border-color-subtle-secondary),
+    0px 4px 8px var(--border-color-subtle-secondary);
 
   --contrast-primary: #ffffff;
   --surface-primary: #ffffffcc;
@@ -63,6 +63,9 @@
   --surface-secondary: #eff8ffcc;
   --indicator-secondary: #0d27ab;
   --track-secondary: #0d27ab;
+
+  --border-radius: 8px;
+  --color-danger: var(--red-11)
 }
 
 /* ========== DARK THEME ========== */
@@ -103,4 +106,5 @@ body {
 body * {
   color: inherit;
   font-family: inherit;
+  box-sizing: border-box;
 }
