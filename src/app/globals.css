@@ -65,7 +65,7 @@
   --track-secondary: #0d27ab;
 
   --border-radius: 8px;
-  --color-danger: var(--red-11)
+  --color-danger: var(--red-11);
 }
 
 /* ========== DARK THEME ========== */
@@ -107,4 +107,18 @@ body * {
   color: inherit;
   font-family: inherit;
   box-sizing: border-box;
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--track-primary);
+    border-radius: 10px;
+    transition: background 0.3s ease-in-out;
+  }
 }

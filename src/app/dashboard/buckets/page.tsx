@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import AddEditBucket from "./components/add-edit-bucket";
 import { IAddEditBucketForm } from "./components/add-edit-bucket-form";
+import SideSlider from "@/components/SideSlider";
+import { FolderIcon } from "@/components/svg/Folder";
 
 const ContentHeader = styled.div`
   width: 100%;
@@ -66,17 +68,11 @@ const Card = styled.div`
 
   border: 1px solid var(--border-color-subtle-primary);
   border-radius: var(--border-radius);
+  cursor: pointer;
 
   &:hover {
     box-shadow: var(--shadow-lg-primary);
   }
-`;
-
-const CardIcon = styled(Folder)`
-  fill: rgb(255, 202, 40);
-  color: rgb(255, 202, 40);
-  width: 38px;
-  height: 38px;
 `;
 
 const CardMiddleContent = styled.div`
@@ -158,6 +154,53 @@ const CardOption = styled.div`
   cursor: pointer;
 `;
 
+const SliderFloderIcon = styled(FolderIcon)`
+  width: 6rem;
+  height: 6rem;
+  margin: 2rem auto;
+`;
+
+const SliderTitle = styled.div`
+  width: 100%;
+  font-size: 20px;
+  color: var(--text-color-dark-primary);
+  font-weight: 600;
+  margin-bottom: 1rem;
+  text-align: center;
+`;
+
+const Label = styled.div`
+  font-size: 16px;
+  font-weight: 600;
+
+  color: var(--text-color-dark-primary);
+`;
+
+const InfoList = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
+
+const InfoListItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  & .label {
+    font-size: 14px;
+    color: var(--text-color-light-primary);
+    font-weight: 500;
+  }
+
+  & .value {
+    font-size: 14px;
+    color: var(--text-color-dark-primary);
+    font-weight: 600;
+  }
+`;
+
 interface Bucket {
   id: string;
   name: string;
@@ -169,6 +212,8 @@ const Buckets = () => {
   const [edit, setEdit] = useState(false);
   const [showDialog, setShowDialog] = useState(false);
   const [bucketId, setBucketId] = useState<string | null>(null);
+  const [sideSliderOpen, setSideSliderOpen] = useState<boolean>(false);
+  const [selectedBucket, setSelectedBucket] = useState<Bucket | null>(null);
 
   const handleCreateBucket = () => {
     setEdit(false);
@@ -216,6 +261,11 @@ const Buckets = () => {
     setBucketId(null);
   };
 
+  const handleBucketClick = (bucket: Bucket) => {
+    setSelectedBucket(bucket);
+    setSideSliderOpen(true);
+  };
+
   useEffect(() => {
     return () => {
       setEdit(false);
@@ -228,9 +278,9 @@ const Buckets = () => {
   const bucketElementList = buckets.map((bucket) => {
     return (
       <Card key={bucket.id}>
-        <CardIcon />
+        <FolderIcon onClick={() => handleBucketClick(bucket)} />
 
-        <CardMiddleContent>
+        <CardMiddleContent onClick={() => handleBucketClick(bucket)}>
           <div>{bucket.name}</div>
           <div>2 MB</div>
         </CardMiddleContent>
@@ -295,6 +345,42 @@ const Buckets = () => {
           onSave={handleBucketSave}
         />
       )}
+
+      <SideSlider
+        open={sideSliderOpen}
+        onOpenChange={() => setSideSliderOpen(false)}
+      >
+        {selectedBucket && (
+          <>
+            <SliderFloderIcon />
+            <SliderTitle>{selectedBucket.name}</SliderTitle>
+            <InfoList>
+              <Label>Info</Label>
+
+              <InfoListItem>
+                <div className="label">Size</div>
+                <div className="value">2 MB</div>
+              </InfoListItem>
+
+              <InfoListItem>
+                <div className="label">Created At</div>
+                <div className="value">2023-03-20</div>
+              </InfoListItem>
+
+              <InfoListItem>
+                <div className="label">Last Modified</div>
+                <div className="value">2023-03-20</div>
+              </InfoListItem>
+
+              <InfoListItem>
+                <div className="label">Created By</div>
+                <div className="value">Rahul Saini</div>
+              </InfoListItem>
+
+            </InfoList>
+          </>
+        )}
+      </SideSlider>
     </>
   );
 };

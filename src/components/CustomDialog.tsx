@@ -3,7 +3,7 @@
 import React from "react";
 import Button, { IButton } from "./button";
 import styled from "styled-components";
-import { CircleX, X } from "lucide-react";
+import { CloseButton } from "./CloseButton";
 
 interface ICustomDialog {
   title: string;
@@ -72,27 +72,6 @@ const DialogTitle = styled.h2`
   font-weight: 600;
 `;
 
-const DialogCloseButton = styled(X)`
-  color: var(--text-color-light-primary);
-  background-color: var(--bg-color-element-primary);
-
-  border-radius: 50%;
-
-  width: 30px;
-  height: 30px;
-
-  padding: 0.35rem;
-
-  &:hover {
-    background-color: var(--bg-color-element-hover-primary);
-    color: var(--text-color-dark-primary);
-  }
-  &:active {
-    background-color: var(--bg-color-element-active-primary);
-    color: var(--text-color-light-primary);
-  }
-`;
-
 const DialogBody = styled.div`
   margin: 0.75rem 0;
   width: 100%;
@@ -119,7 +98,7 @@ const CustomDialog: React.FC<ICustomDialog> = (props) => {
       <DialogContainer>
         <DialogHeader>
           <DialogTitle>Header Title</DialogTitle>
-          <DialogCloseButton onClick={props.close} />
+          <CloseButton onClick={props.close} />
         </DialogHeader>
         <DialogBody>{props.children}</DialogBody>
         <DialogFooter>{actionButton}</DialogFooter>
