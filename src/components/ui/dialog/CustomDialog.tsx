@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Button, { IButton } from "./button";
+import Button, { IButton } from "../button/button";
 import styled from "styled-components";
-import { CloseButton } from "./CloseButton";
+import { CloseButton } from "../button/CloseButton";
 
 interface ICustomDialog {
   title: string;
