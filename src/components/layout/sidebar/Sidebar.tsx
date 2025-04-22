@@ -2,11 +2,36 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { BarChart2, BookOpen, Bot, MessageSquare } from 'lucide-react';
+import { BarChart2, BookOpen, Bot, MessageSquare, X } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { typography } from '@/styles/typography';
 
-const SidebarContainer = styled.aside`
+interface SidebarProps {
+  isOpen: boolean;
+  onToggle: () => void;
+}
+
+const SidebarOverlay = styled.div<{ $isOpen: boolean }>`
+  @media (max-width: 768px) {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 35;
+    opacity: ${props => props.$isOpen ? 1 : 0};
+    visibility: ${props => props.$isOpen ? 'visible' : 'hidden'};
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+const SidebarContainer = styled.aside<{ $isOpen: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -18,6 +43,41 @@ const SidebarContainer = styled.aside`
   flex-direction: column;
   z-index: 40;
   box-shadow: 1px 0 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+
+  // Mobile: Hide by default
+  @media (max-width: 768px) {
+    transform: translateX(${props => props.$isOpen ? '0' : '-100%'});
+  }
+
+  // Desktop: Always visible
+  @media (min-width: 769px) {
+    transform: none;
+  }
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: var(--gray-9);
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  z-index: 2;
+  
+  &:hover {
+    background: var(--gray-3);
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
 `;
 
 const Logo = styled.div`
@@ -27,10 +87,11 @@ const Logo = styled.div`
   padding: 0 24px;
   border-bottom: 1px solid var(--gray-4);
   background: var(--bg-color-primary);
+  position: relative;
+  z-index: 1;
   
   h1 {
-    font-size: 1.25rem;
-    font-weight: 600;
+    ${typography.h4}
     color: var(--text-color-dark-secondary);
     margin: 0;
     display: flex;
@@ -52,6 +113,9 @@ const NavSection = styled.nav`
   padding: 24px 16px;
   flex: 1;
   overflow-y: auto;
+  background: var(--bg-color-primary);
+  position: relative;
+  z-index: 1;
 
   &::-webkit-scrollbar {
     width: 6px;
@@ -78,7 +142,7 @@ const NavItem = styled(Link)<{ $active?: boolean }>`
   margin-bottom: 2px;
   transition: all 0.2s ease;
   font-weight: ${props => props.$active ? '600' : '500'};
-  font-size: 0.875rem;
+  ${typography.body2}
   
   &:hover {
     background: ${props => props.$active ? 'var(--blue-2)' : 'var(--gray-2)'};
@@ -107,7 +171,7 @@ const NavGroup = styled.div`
 `;
 
 const NavGroupTitle = styled.h3`
-  font-size: 0.75rem;
+  ${typography.caption}
   font-weight: 600;
   color: var(--gray-8);
   text-transform: uppercase;
@@ -122,30 +186,36 @@ const navItems = [
   { icon: <MessageSquare />, label: 'Virtual Agent', href: '/dashboard/virtual-agent' },
 ];
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
   const pathname = usePathname();
 
   return (
-    <SidebarContainer>
-      <Logo>
-        <h1>AngleAI</h1>
-      </Logo>
-      <NavSection>
-        <NavGroup>
-          <NavGroupTitle>Main</NavGroupTitle>
-          {navItems.map((item) => (
-            <NavItem 
-              key={item.href}
-              href={item.href}
-              $active={pathname === item.href}
-            >
-              {item.icon}
-              {item.label}
-            </NavItem>
-          ))}
-        </NavGroup>
-      </NavSection>
-    </SidebarContainer>
+    <>
+      <SidebarOverlay $isOpen={isOpen} onClick={onToggle} />
+      <SidebarContainer $isOpen={isOpen}>
+        <CloseButton onClick={onToggle}>
+          <X size={24} />
+        </CloseButton>
+        <Logo>
+          <h1>AngleAI</h1>
+        </Logo>
+        <NavSection>
+          <NavGroup>
+            <NavGroupTitle>Main</NavGroupTitle>
+            {navItems.map((item) => (
+              <NavItem 
+                key={item.href}
+                href={item.href}
+                $active={pathname === item.href}
+              >
+                {item.icon}
+                {item.label}
+              </NavItem>
+            ))}
+          </NavGroup>
+        </NavSection>
+      </SidebarContainer>
+    </>
   );
 };
 

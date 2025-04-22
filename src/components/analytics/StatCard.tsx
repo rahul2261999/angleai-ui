@@ -16,12 +16,12 @@ const Value = styled.div`
   margin: 8px 0;
 `;
 
-const Trend = styled.div<{ positive: boolean }>`
+const Trend = styled.div<{ $positive: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
   font-size: 0.875rem;
-  color: ${props => props.positive ? 'var(--blue-11)' : 'var(--red-11)'};
+  color: ${props => props.$positive ? 'var(--blue-11)' : 'var(--red-11)'};
 
   svg {
     width: 16px;
@@ -58,7 +58,7 @@ const StatCard: React.FC<StatCardProps> = ({
       <Value>
         {prefix}{value}{suffix}
       </Value>
-      <Trend positive={isPositive}>
+      <Trend $positive={isPositive}>
         {isPositive ? <TrendingUp /> : <TrendingDown />}
         {trendValue}% {isPositive ? 'increase' : 'decrease'}
       </Trend>

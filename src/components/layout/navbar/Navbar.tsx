@@ -4,26 +4,74 @@ import React from 'react';
 import styled from 'styled-components';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Bell, User, Settings, LogOut, Search, Menu } from 'lucide-react';
+import { typography } from '@/styles/typography';
+
+interface NavbarProps {
+  onMenuClick: () => void;
+}
+
+const IconButton = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  position: relative;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  color: var(--gray-9);
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background: var(--gray-2);
+    color: var(--gray-11);
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+`;
 
 const NavbarContainer = styled.nav`
   position: fixed;
   top: 0;
   right: 0;
-  left: 280px;
+  left: 0;
   height: 70px;
   background: var(--bg-color-primary);
   border-bottom: 1px solid var(--gray-4);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
-  z-index: 50;
+  padding: 0 16px;
+  z-index: 30;
   box-shadow: 0 2px 6px rgba(37, 39, 60, 0.04);
+
+  @media (min-width: 769px) {
+    left: 280px;
+    padding: 0 32px;
+  }
+`;
+
+const MenuButton = styled(IconButton)`
+  @media (min-width: 769px) {
+    display: none;
+  }
 `;
 
 const SearchContainer = styled.div`
   position: relative;
-  width: 380px;
+  width: 100%;
+  max-width: 380px;
+  margin: 0 16px;
+  display: none;
+
+  @media (min-width: 640px) {
+    display: block;
+  }
 `;
 
 const SearchInput = styled.input`
@@ -34,7 +82,7 @@ const SearchInput = styled.input`
   border-radius: 8px;
   background: var(--gray-2);
   color: var(--gray-11);
-  font-size: 0.875rem;
+  ${typography.body2}
   transition: all 0.2s ease;
 
   &:focus {
@@ -62,31 +110,10 @@ const SearchIcon = styled(Search)`
 const NavActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-`;
+  gap: 8px;
 
-const IconButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  position: relative;
-  width: 42px;
-  height: 42px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px;
-  color: var(--gray-9);
-  transition: all 0.2s ease;
-  
-  &:hover {
-    background: var(--gray-2);
-    color: var(--gray-11);
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
+  @media (min-width: 640px) {
+    gap: 12px;
   }
 `;
 
@@ -101,9 +128,14 @@ const ProfileButton = styled(IconButton)`
   }
 
   span {
-    font-size: 0.875rem;
+    ${typography.body2}
     font-weight: 500;
     color: var(--gray-11);
+    display: none;
+
+    @media (min-width: 640px) {
+      display: block;
+    }
   }
   
   &:after {
@@ -125,7 +157,7 @@ const NotificationBadge = styled.span`
   border-radius: 50%;
   width: 18px;
   height: 18px;
-  font-size: 11px;
+  ${typography.caption}
   display: flex;
   align-items: center;
   justify-content: center;
@@ -161,7 +193,7 @@ const DropdownItem = styled(DropdownMenu.Item)`
   cursor: pointer;
   border-radius: 4px;
   color: var(--gray-11);
-  font-size: 0.875rem;
+  ${typography.body2}
   
   &:hover {
     background: var(--gray-3);
@@ -198,26 +230,6 @@ const NotificationItem = styled.div`
   }
 `;
 
-const UnreadDot = styled.div<{ $unread: boolean }>`
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: ${props => props.$unread ? 'var(--blue-9)' : 'transparent'};
-  margin-top: 6px;
-`;
-
-const NotificationContent = styled.div`
-  flex: 1;
-  font-size: 0.875rem;
-  color: var(--gray-11);
-`;
-
-const NotificationTime = styled.div`
-  font-size: 0.75rem;
-  color: var(--gray-8);
-  margin-top: 4px;
-`;
-
 interface Notification {
   id: string;
   message: string;
@@ -225,67 +237,80 @@ interface Notification {
   unread: boolean;
 }
 
-const Navbar: React.FC = () => {
-  const [notifications] = React.useState<Notification[]>([
-    { id: '1', message: 'New message from John Doe', time: '5 min ago', unread: true },
-    { id: '2', message: 'Your report is ready', time: '2 hours ago', unread: true },
-    { id: '3', message: 'Meeting reminder', time: 'Yesterday', unread: false },
-  ]);
+const notifications: Notification[] = [
+  {
+    id: '1',
+    message: 'New comment on your post',
+    time: '5m ago',
+    unread: true,
+  },
+  {
+    id: '2',
+    message: 'You have a new follower',
+    time: '1h ago',
+    unread: true,
+  },
+];
 
-  const unreadCount = notifications.filter(n => n.unread).length;
-
+const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
   return (
     <NavbarContainer>
+      <MenuButton onClick={onMenuClick}>
+        <Menu />
+      </MenuButton>
+      
       <SearchContainer>
         <SearchIcon />
-        <SearchInput placeholder="Search in app..." />
+        <SearchInput placeholder="Search..." />
       </SearchContainer>
 
       <NavActions>
-        <IconButton>
-          <Menu />
-        </IconButton>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <IconButton>
               <Bell />
-              {unreadCount > 0 && <NotificationBadge>{unreadCount}</NotificationBadge>}
+              <NotificationBadge>2</NotificationBadge>
             </IconButton>
           </DropdownMenu.Trigger>
-          <DropdownContent>
-            {notifications.map(notification => (
-              <NotificationItem key={notification.id}>
-                <UnreadDot $unread={notification.unread} />
-                <NotificationContent>
-                  {notification.message}
-                  <NotificationTime>{notification.time}</NotificationTime>
-                </NotificationContent>
-              </NotificationItem>
-            ))}
-          </DropdownContent>
+
+          <DropdownMenu.Portal>
+            <DropdownContent align="end">
+              {notifications.map((notification) => (
+                <NotificationItem key={notification.id}>
+                  <div>
+                    <p>{notification.message}</p>
+                    <small>{notification.time}</small>
+                  </div>
+                </NotificationItem>
+              ))}
+            </DropdownContent>
+          </DropdownMenu.Portal>
         </DropdownMenu.Root>
 
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <ProfileButton>
-              <span>Admin</span>
+              <span>John Doe</span>
             </ProfileButton>
           </DropdownMenu.Trigger>
-          <DropdownContent>
-            <DropdownItem>
-              <User />
-              Profile
-            </DropdownItem>
-            <DropdownItem>
-              <Settings />
-              Account Settings
-            </DropdownItem>
-            <Separator />
-            <DropdownItem>
-              <LogOut />
-              Sign Out
-            </DropdownItem>
-          </DropdownContent>
+
+          <DropdownMenu.Portal>
+            <DropdownContent align="end">
+              <DropdownItem>
+                <User />
+                Profile
+              </DropdownItem>
+              <DropdownItem>
+                <Settings />
+                Settings
+              </DropdownItem>
+              <Separator />
+              <DropdownItem className="text-red-600">
+                <LogOut />
+                Logout
+              </DropdownItem>
+            </DropdownContent>
+          </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </NavActions>
     </NavbarContainer>

@@ -7,12 +7,19 @@ import Layout from '@/components/layout/Layout';
 import FolderCard from '@/components/kb-manager/FolderCard';
 import FolderInfo from '@/components/kb-manager/FolderInfo';
 import { KBFolder, ViewMode } from '@/types/kb';
+import { media } from '@/styles/breakpoints';
 
 const Header = styled.div`
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  flex-direction: column;
+  gap: 16px;
   margin-bottom: 32px;
+
+  ${media.md} {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
 `;
 
 const HeaderLeft = styled.div`
@@ -21,25 +28,38 @@ const HeaderLeft = styled.div`
   gap: 8px;
 
   h1 {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: 600;
     color: var(--gray-12);
     margin: 0;
     letter-spacing: -0.02em;
+
+    ${media.md} {
+      font-size: 1.75rem;
+    }
   }
 `;
 
 const HeaderRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
+  flex-wrap: wrap;
+
+  ${media.md} {
+    gap: 16px;
+  }
 `;
 
 const Description = styled.p`
   color: var(--gray-11);
-  font-size: 0.9375rem;
+  font-size: 0.875rem;
   margin: 0;
   line-height: 1.5;
+
+  ${media.md} {
+    font-size: 0.9375rem;
+  }
 `;
 
 const ViewToggle = styled.div`
@@ -48,6 +68,11 @@ const ViewToggle = styled.div`
   background: var(--gray-3);
   border-radius: 8px;
   padding: 4px;
+  margin-right: auto;
+
+  ${media.md} {
+    margin-right: 0;
+  }
 `;
 
 const ToggleButton = styled.button<{ $active?: boolean }>`
@@ -61,9 +86,20 @@ const ToggleButton = styled.button<{ $active?: boolean }>`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  min-width: 36px;
 
   &:hover {
     color: var(--gray-12);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+
+    ${media.md} {
+      width: 20px;
+      height: 20px;
+    }
   }
 `;
 
@@ -80,32 +116,47 @@ const CreateButton = styled.button`
   gap: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
+  white-space: nowrap;
 
   &:hover {
     background: var(--blue-10);
   }
 
   svg {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
+
+    ${media.md} {
+      width: 18px;
+      height: 18px;
+    }
   }
 `;
 
-const Content = styled.div<{ view: ViewMode }>`
+const Content = styled.div<{ $view: ViewMode }>`
   margin-top: 24px;
   display: flex;
   flex-direction: column;
-  gap: ${props => props.view === 'grid' ? '24px' : '12px'};
+  gap: ${props => props.$view === 'grid' ? '16px' : '12px'};
 
-  ${props => props.view === 'grid' && `
+  ${props => props.$view === 'grid' && `
     display: grid;
-    gap: 24px;
+    gap: 16px;
     
-    @media (max-width: 1300px) {
-      grid-template-columns: repeat(4, 1fr);
+    ${media.sm} {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
     }
     
-    @media (min-width: 1301px) {
+    ${media.md} {
+      grid-template-columns: repeat(3, 1fr);
+    }
+    
+    ${media.lg} {
+      gap: 24px;
+    }
+    
+    ${media.xl} {
       grid-template-columns: repeat(4, 1fr);
     }
   `}
@@ -191,7 +242,7 @@ const KBManagerPage: React.FC = () => {
         </HeaderRight>
       </Header>
 
-      <Content view={viewMode}>
+      <Content $view={viewMode}>
         {mockFolders.map(folder => (
           <FolderCard
             key={folder.id}
