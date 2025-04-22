@@ -17,7 +17,7 @@ const NavbarContainer = styled.nav`
   align-items: center;
   justify-content: space-between;
   padding: 0 32px;
-  z-index: 999;
+  z-index: 50;
   box-shadow: 0 2px 6px rgba(37, 39, 60, 0.04);
 `;
 
@@ -198,11 +198,11 @@ const NotificationItem = styled.div`
   }
 `;
 
-const UnreadDot = styled.div<{ unread: boolean }>`
+const UnreadDot = styled.div<{ $unread: boolean }>`
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: ${props => props.unread ? 'var(--blue-9)' : 'transparent'};
+  background: ${props => props.$unread ? 'var(--blue-9)' : 'transparent'};
   margin-top: 6px;
 `;
 
@@ -255,7 +255,7 @@ const Navbar: React.FC = () => {
           <DropdownContent>
             {notifications.map(notification => (
               <NotificationItem key={notification.id}>
-                <UnreadDot unread={notification.unread} />
+                <UnreadDot $unread={notification.unread} />
                 <NotificationContent>
                   {notification.message}
                   <NotificationTime>{notification.time}</NotificationTime>

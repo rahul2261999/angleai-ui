@@ -16,7 +16,8 @@ const SidebarContainer = styled.aside`
   border-right: 1px solid var(--gray-4);
   display: flex;
   flex-direction: column;
-  z-index: 1000;
+  z-index: 40;
+  box-shadow: 1px 0 8px rgba(0, 0, 0, 0.05);
 `;
 
 const Logo = styled.div`
@@ -66,33 +67,33 @@ const NavSection = styled.nav`
   }
 `;
 
-const NavItem = styled(Link)<{ active?: boolean }>`
+const NavItem = styled(Link)<{ $active?: boolean }>`
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 12px 16px;
   border-radius: 8px;
-  color: ${props => props.active ? 'var(--blue-11)' : 'var(--gray-9)'};
-  background: ${props => props.active ? 'var(--blue-2)' : 'transparent'};
+  color: ${props => props.$active ? 'var(--blue-11)' : 'var(--gray-9)'};
+  background: ${props => props.$active ? 'var(--blue-2)' : 'transparent'};
   margin-bottom: 2px;
   transition: all 0.2s ease;
-  font-weight: ${props => props.active ? '600' : '500'};
+  font-weight: ${props => props.$active ? '600' : '500'};
   font-size: 0.875rem;
   
   &:hover {
-    background: ${props => props.active ? 'var(--blue-2)' : 'var(--gray-2)'};
-    color: ${props => props.active ? 'var(--blue-11)' : 'var(--gray-11)'};
+    background: ${props => props.$active ? 'var(--blue-2)' : 'var(--gray-2)'};
+    color: ${props => props.$active ? 'var(--blue-11)' : 'var(--gray-11)'};
   }
   
   svg {
     width: 20px;
     height: 20px;
-    color: ${props => props.active ? 'var(--blue-11)' : 'var(--gray-8)'};
+    color: ${props => props.$active ? 'var(--blue-11)' : 'var(--gray-8)'};
     transition: color 0.2s ease;
   }
 
   &:hover svg {
-    color: ${props => props.active ? 'var(--blue-11)' : 'var(--gray-11)'};
+    color: ${props => props.$active ? 'var(--blue-11)' : 'var(--gray-11)'};
   }
 `;
 
@@ -136,7 +137,7 @@ const Sidebar: React.FC = () => {
             <NavItem 
               key={item.href}
               href={item.href}
-              active={pathname === item.href}
+              $active={pathname === item.href}
             >
               {item.icon}
               {item.label}
