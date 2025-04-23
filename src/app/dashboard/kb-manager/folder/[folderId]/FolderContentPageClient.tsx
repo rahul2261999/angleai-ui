@@ -2,13 +2,15 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Grid2X2, List, Plus } from 'lucide-react';
+import { Grid2X2, List, Plus, ArrowLeft } from 'lucide-react';
 import Layout from '@/components/layout/Layout';
-import { FileInfo, KBFolder, ViewMode } from '@/types/kb';
+import { ViewMode, KBFolder } from '@/types/kb';
 import { media } from '@/styles/breakpoints';
-import FolderCard from '@/features/dashboard/kb-manager/FolderCard';
+import Link from 'next/link';
+import FileCard from '@/features/dashboard/kb-manager/FileCard';
+import { FileType } from '@/types/file';
 import SideSlider from '@/components/ui/dialog/SideSlider';
-import FolderInfo from '@/features/dashboard/kb-manager/FolderInfo';
+import FileInfo from '@/features/dashboard/kb-manager/FileInfo';
 
 const Header = styled.div`
   display: flex;
@@ -113,6 +115,26 @@ const ToggleButton = styled.button<{ $active?: boolean }>`
   }
 `;
 
+const BackButton = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--gray-11);
+  text-decoration: none;
+  font-size: 0.875rem;
+  padding: 8px 0;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--gray-12);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
+`;
+
 const CreateButton = styled.button`
   background: var(--blue-9);
   border: none;
@@ -179,13 +201,9 @@ const Content = styled.div<{ $view: ViewMode }>`
   `}
 `;
 
-interface ItemInfo {
-  type: 'folder' | 'file';
-  data: KBFolder | FileInfo;
-}
 // Mock data - replace with API call later
-const mockFolders: KBFolder[] = [
-  {
+const mockFolders: { [key: string]: KBFolder } = {
+  '1': {
     id: '1',
     name: 'Product Knowledge',
     createdAt: '2024-01-15T10:00:00Z',
@@ -193,7 +211,7 @@ const mockFolders: KBFolder[] = [
     totalDocs: 45,
     size: '2.3 MB',
   },
-  {
+  '2': {
     id: '2',
     name: 'Customer Support',
     createdAt: '2024-01-20T09:00:00Z',
@@ -201,7 +219,7 @@ const mockFolders: KBFolder[] = [
     totalDocs: 32,
     size: '1.8 MB',
   },
-  {
+  '3': {
     id: '3',
     name: 'Technical Docs',
     createdAt: '2024-02-01T14:00:00Z',
@@ -209,40 +227,91 @@ const mockFolders: KBFolder[] = [
     totalDocs: 28,
     size: '3.1 MB',
   },
+};
+
+const mockFiles: FileType[] = [
+  {
+    id: '1',
+    name: 'Product Overview.pdf',
+    type: 'pdf',
+    size: 2300000,
+    createdAt: '2024-02-20T15:30:00Z',
+    updatedAt: '2024-02-20T15:30:00Z',
+  },
+  {
+    id: '2',
+    name: 'Technical Specifications.docx',
+    type: 'docx',
+    size: 1800000,
+    createdAt: '2024-02-19T11:20:00Z',
+    updatedAt: '2024-02-19T11:20:00Z',
+  },
+  {
+    id: '3',
+    name: 'Release Notes.txt',
+    type: 'txt',
+    size: 156000,
+    createdAt: '2024-02-21T09:45:00Z',
+    updatedAt: '2024-02-21T09:45:00Z',
+  },
 ];
 
-const KBManagerPage: React.FC = () => {
+interface FolderContentPageClientProps {
+  folderId: string;
+}
+
+export function FolderContentPageClient({ folderId }: FolderContentPageClientProps) {
   const [viewMode, setViewMode] = React.useState<ViewMode>('grid');
   const [showInfo, setShowInfo] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState<ItemInfo | null>(null);
+  const [selectedFile, setSelectedFile] = React.useState<FileType | null>(null);
+  
+  // Get folder data - replace with API call later
+  const folder = mockFolders[folderId];
 
-  const handleCreateKB = () => {
-    // Implement KB creation logic
-    console.log('Create KB clicked');
+  const handleCreateFile = () => {
+    // Implement file creation logic
+    console.log('Create file clicked');
   };
 
-  const handleShowInfo = (type: 'folder' | 'file', data: KBFolder | FileInfo) => {
-    setSelectedItem({ type, data });
+  const handleEditFile = (fileId: string) => {
+    // Implement file edit logic
+    console.log('Edit file:', fileId);
+  };
+
+  const handleDeleteFile = (fileId: string) => {
+    // Implement file delete logic
+    console.log('Delete file:', fileId);
+  };
+
+  const handleShowInfo = (file: FileType) => {
+    setSelectedFile(file);
     setShowInfo(true);
   };
 
-  const handleEditFolder = (folder: KBFolder) => {
-    // Implement folder edit logic
-    console.log('Edit folder:', folder);
-  };
-
-  const handleDeleteFolder = (folder: KBFolder) => {
-    // Implement folder delete logic
-    console.log('Delete folder:', folder);
-  };
+  if (!folder) {
+    return (
+      <Layout>
+        <BackButton href="/dashboard/kb-manager">
+          <ArrowLeft />
+          Back to Folders
+        </BackButton>
+        <div>Folder not found</div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
+      <BackButton href="/dashboard/kb-manager">
+        <ArrowLeft />
+        Back to Folders
+      </BackButton>
+
       <Header>
         <HeaderLeft>
-          <h1>Knowledge Base Manager</h1>
+          <h1>{folder.name}</h1>
           <Description>
-            Manage your knowledge base folders and documents
+            Manage documents in this knowledge base folder
           </Description>
         </HeaderLeft>
         
@@ -262,22 +331,21 @@ const KBManagerPage: React.FC = () => {
             </ToggleButton>
           </ViewToggle>
 
-          <CreateButton onClick={handleCreateKB}>
+          <CreateButton onClick={handleCreateFile}>
             <Plus />
-            Create KB
+            Upload File
           </CreateButton>
         </HeaderRight>
       </Header>
 
       <Content $view={viewMode}>
-        {mockFolders.map((folder) => (
-          <FolderCard
-            key={folder.id}
-            folder={folder}
-            view={viewMode}
-            onEdit={() => handleEditFolder(folder)}
-            onDelete={() => handleDeleteFolder(folder)}
-            onInfo={() => handleShowInfo('folder', folder)}
+        {mockFiles.map(file => (
+          <FileCard
+            key={file.id}
+            file={file}
+            onDelete={() => handleDeleteFile(file.id)}
+            onRename={() => handleEditFile(file.id)}
+            onInfo={() => handleShowInfo(file)}
           />
         ))}
       </Content>
@@ -286,19 +354,8 @@ const KBManagerPage: React.FC = () => {
         open={showInfo}
         onOpenChange={() => setShowInfo(false)}
       >
-        {selectedItem?.type === 'folder' && (
-          <FolderInfo folder={selectedItem.data as KBFolder} />
-        )}
-        {selectedItem?.type === 'file' && (
-          <div>
-            <h3>{selectedItem.data.name}</h3>
-            {/* Add file-specific information here */}
-          </div>
-        )}
+        <FileInfo file={selectedFile} />
       </SideSlider>
     </Layout>
   );
-};
-
-const Page: React.FC = () => <KBManagerPage />;
-export default Page; 
+} 

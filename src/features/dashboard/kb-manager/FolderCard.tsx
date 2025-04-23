@@ -3,10 +3,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { MoreVertical, Pencil, Trash2, Info } from 'lucide-react';
+import { MoreVertical, Pencil, Trash2, Info, FolderOpen } from 'lucide-react';
 import { KBFolder, ViewMode } from '@/types/kb';
 import Image from 'next/image';
 import { media } from '@/styles/breakpoints';
+import { useRouter } from 'next/navigation';
 
 const Card = styled.div<{ $view: ViewMode }>`
   background: var(--bg-color-primary);
@@ -20,7 +21,7 @@ const Card = styled.div<{ $view: ViewMode }>`
   align-items: center;
   gap: 16px;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   height: 100px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02),
               0 4px 8px rgba(0, 0, 0, 0.02);
@@ -95,7 +96,7 @@ const CardHeader = styled.div<{ $view: ViewMode }>`
   margin-left: auto;
   flex-shrink: 0;
   position: relative;
-  z-index: 1;
+  z-index: 10;
   height: 100%;
   padding: 4px;
 `;
@@ -111,7 +112,8 @@ const MenuButton = styled.button`
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
-  z-index: 2;
+  position: relative;
+  z-index: 20;
 
   ${media.md} {
     padding: 8px;
@@ -208,21 +210,45 @@ const DropdownContent = styled(DropdownMenu.Content)`
   padding: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   border: 1px solid var(--gray-4);
-  animation: slideDown 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 9999;
+  position: absolute;
+  transform-origin: var(--radix-dropdown-menu-content-transform-origin);
+  will-change: transform, opacity;
+  animation: none;
 
-  @keyframes slideDown {
+  &[data-state="open"] {
+    animation: dropdownSlideIn 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  &[data-state="closed"] {
+    animation: dropdownSlideOut 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  @keyframes dropdownSlideIn {
     from {
       opacity: 0;
-      transform: translateY(-12px) scale(0.95);
+      transform: translateY(-4px) scale(0.95);
     }
     to {
       opacity: 1;
       transform: translateY(0) scale(1);
     }
   }
+
+  @keyframes dropdownSlideOut {
+    from {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-4px) scale(0.95);
+    }
+  }
 `;
 
 const DropdownItem = styled(DropdownMenu.Item)`
+  all: unset;
   padding: 10px 14px;
   display: flex;
   align-items: center;
@@ -231,24 +257,24 @@ const DropdownItem = styled(DropdownMenu.Item)`
   border-radius: 8px;
   color: var(--gray-11);
   font-size: 0.875rem;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
+  user-select: none;
+  outline: none;
   
   &:hover {
     background: var(--gray-3);
-    outline: none;
-    transform: translateX(4px);
+    transform: translateX(2px);
   }
   
   &[data-highlighted] {
     background: var(--gray-3);
-    outline: none;
   }
 
   svg {
     width: 16px;
     height: 16px;
     color: var(--gray-9);
-    transition: color 0.2s ease;
+    transition: color 0.15s ease;
   }
 
   &[data-destructive] {
@@ -270,7 +296,6 @@ interface FolderCardProps {
   onEdit?: (folder: KBFolder) => void;
   onDelete?: (folder: KBFolder) => void;
   onInfo?: (folder: KBFolder) => void;
-  onClick?: (folder: KBFolder) => void;
 }
 
 const FolderCard: React.FC<FolderCardProps> = ({
@@ -279,10 +304,15 @@ const FolderCard: React.FC<FolderCardProps> = ({
   onEdit,
   onDelete,
   onInfo,
-  onClick,
 }) => {
+  const router = useRouter();
+
+  const handleCardClick = () => {
+    router.push(`/dashboard/kb-manager/folder/${folder.id}`);
+  };
+
   return (
-    <Card $view={view} onClick={() => onClick?.(folder)}>
+    <Card $view={view} onClick={handleCardClick}>
       <IconWrapper $view={view}>
         <Image
           src="/assets/icons/folder.svg"
@@ -295,11 +325,11 @@ const FolderCard: React.FC<FolderCardProps> = ({
       <ContentWrapper $view={view}>
         <FolderName $view={view}>{folder.name}</FolderName>
         <MetaWrapper $view={view}>
-        <FolderInfo $view={view}>
-          <span>{folder.totalDocs} docs</span>
-          <span>•</span>
-          <span>{folder.size}</span>
-        </FolderInfo>
+          <FolderInfo $view={view}>
+            <span>{folder.totalDocs} docs</span>
+            <span>•</span>
+            <span>{folder.size}</span>
+          </FolderInfo>
         </MetaWrapper>
       </ContentWrapper>
 
@@ -310,23 +340,39 @@ const FolderCard: React.FC<FolderCardProps> = ({
               <MoreVertical size={20} />
             </MenuButton>
           </DropdownMenu.Trigger>
-          <DropdownContent>
-            <DropdownItem onSelect={() => onEdit?.(folder)}>
-              <Pencil />
-              Edit
-            </DropdownItem>
-            <DropdownItem onSelect={() => onInfo?.(folder)}>
-              <Info />
-              Info
-            </DropdownItem>
-            <DropdownItem 
-              onSelect={() => onDelete?.(folder)}
-              data-destructive
+          <DropdownMenu.Portal>
+            <DropdownContent
+              onCloseAutoFocus={(e) => e.preventDefault()}
+              onClick={(e) => e.stopPropagation()}
+              sideOffset={5}
+              align="center"
+              alignOffset={0}
+              side="bottom"
+              avoidCollisions={true}
             >
-              <Trash2 />
-              Delete
-            </DropdownItem>
-          </DropdownContent>
+              <DropdownItem onSelect={() => {
+                router.push(`/dashboard/kb-manager/folder/${folder.id}`);
+              }}>
+                <FolderOpen />
+                Open
+              </DropdownItem>
+              <DropdownItem onSelect={() => onEdit?.(folder)}>
+                <Pencil />
+                Edit
+              </DropdownItem>
+              <DropdownItem onSelect={() => onInfo?.(folder)}>
+                <Info />
+                Info
+              </DropdownItem>
+              <DropdownItem 
+                onSelect={() => onDelete?.(folder)}
+                data-destructive
+              >
+                <Trash2 />
+                Delete
+              </DropdownItem>
+            </DropdownContent>
+          </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </CardHeader>
     </Card>

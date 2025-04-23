@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { CloseButton } from "./CloseButton";
 import React from "react";
-import Button from "./button";
 import { AnimatePresence, motion } from "framer-motion";
+import { CloseButton } from "../button/CloseButton";
 
 const Root = styled(motion.div)`
   min-width: 340px;

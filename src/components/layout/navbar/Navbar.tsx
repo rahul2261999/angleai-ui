@@ -3,7 +3,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { Bell, User, Settings, LogOut, Search, Menu } from 'lucide-react';
+import { Bell, User, Settings, LogOut, Search, Menu, Mail, Circle } from 'lucide-react';
 import { typography } from '@/styles/typography';
 
 interface NavbarProps {
@@ -20,13 +20,18 @@ const IconButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 10px;
   color: var(--gray-9);
   transition: all 0.2s ease;
   
   &:hover {
     background: var(--gray-2);
     color: var(--gray-11);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0px);
   }
 
   svg {
@@ -123,8 +128,8 @@ const ProfileButton = styled(IconButton)`
   width: auto;
   min-width: 40px;
   max-width: 200px;
-  padding: 0 8px 0 12px;
-  gap: 8px;
+  padding: 0 12px;
+  gap: 10px;
   background: var(--gray-2);
   height: 40px;
   display: inline-flex;
@@ -139,7 +144,6 @@ const ProfileButton = styled(IconButton)`
     ${typography.body2}
     font-weight: 500;
     color: var(--gray-11);
-    display: none;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -153,22 +157,6 @@ const ProfileButton = styled(IconButton)`
 
     @media (min-width: 640px) {
       display: flex;
-    }
-
-    &:hover::after {
-      content: attr(data-tooltip);
-      position: absolute;
-      bottom: -30px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: var(--gray-12);
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      white-space: nowrap;
-      z-index: 51;
-      pointer-events: none;
     }
   }
   
@@ -184,71 +172,116 @@ const ProfileButton = styled(IconButton)`
   }
 `;
 
-const NotificationBadge = styled.span`
+const NotificationBell = styled(Bell)`
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.8px;
+`;
+
+const NotificationIconBadge = styled.span`
   position: absolute;
   top: 4px;
   right: 4px;
+  width: 18px;
+  height: 18px;
   background: var(--color-danger);
   color: white;
   border-radius: 50%;
-  width: 18px;
-  height: 18px;
-  ${typography.caption}
+  font-size: 11px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 2px solid var(--bg-color-primary);
-  font-size: 11px;
-  padding: 0;
-  line-height: 1;
+  font-weight: 500;
+`;
+
+const StatusBadge = styled.span<{ unread: boolean }>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background: ${props => props.unread ? 'var(--blue-2)' : 'var(--gray-2)'};
+  color: ${props => props.unread ? 'var(--blue-9)' : 'var(--gray-9)'};
+  white-space: nowrap;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: ${props => props.unread ? 'var(--blue-3)' : 'var(--gray-3)'};
+  }
 `;
 
 const DropdownContent = styled(DropdownMenu.Content)`
   min-width: 220px;
   background: var(--bg-color-primary);
-  border-radius: 8px;
-  padding: 6px;
-  box-shadow: var(--shadow-lg-primary);
-  border: 1px solid var(--border-color-subtle-primary);
-  animation: slideDown 0.1s ease;
+  border-radius: 12px;
+  padding: 8px;
+  box-shadow: 0 10px 40px -8px rgba(0, 0, 0, 0.12);
+  border: 1px solid var(--gray-3);
+  animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 50;
+  overflow: hidden;
 
   @keyframes slideDown {
     from {
       opacity: 0;
-      transform: translateY(-8px);
+      transform: translateY(-8px) scale(0.98);
     }
     to {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
   }
 `;
 
 const DropdownItem = styled(DropdownMenu.Item)`
-  padding: 8px 12px;
+  padding: 10px 12px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 8px;
   color: var(--gray-11);
   ${typography.body2}
+  font-weight: 500;
+  width: 100%;
+  transition: all 0.2s ease;
   
   &:hover {
     background: var(--gray-3);
+    color: var(--gray-12);
     outline: none;
   }
   
   &[data-highlighted] {
     background: var(--gray-3);
+    color: var(--gray-12);
     outline: none;
   }
 
   svg {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
     color: var(--gray-9);
+    transition: color 0.2s ease;
+  }
+
+  &:hover svg {
+    color: var(--gray-11);
+  }
+
+  &.text-red-600 {
+    color: var(--red-11);
+    
+    svg {
+      color: var(--red-11);
+    }
+
+    &:hover {
+      background: var(--red-3);
+    }
   }
 `;
 
@@ -258,29 +291,135 @@ const Separator = styled(DropdownMenu.Separator)`
   margin: 6px;
 `;
 
-const NotificationItem = styled.div`
+const NotificationHeader = styled.div`
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--gray-3);
+  background: var(--gray-1);
+  margin-bottom: 4px;
+
+  h3 {
+    ${typography.body2}
+    font-weight: 600;
+    color: var(--gray-12);
+    margin: 0;
+    font-size: 1rem;
+  }
+`;
+
+const MarkAllRead = styled.button`
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--gray-9);
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--blue-9);
+    background: var(--blue-2);
+  }
+
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+`;
+
+const NotificationsList = styled.div`
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 8px 0;
+  background: var(--bg-color-primary);
+
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--gray-5);
+    border-radius: 10px;
+  }
+`;
+
+const NotificationWrapper = styled.div`
+  position: relative;
+  padding: 8px 8px;
+
+  &:not(:last-child) {
+    &:after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: var(--gray-3);
+    }
+  }
+`;
+
+const NotificationItem = styled.div<{ unread: boolean }>`
   padding: 12px;
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  border-bottom: 1px solid var(--border-color-subtle-primary);
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: ${props => props.unread ? 'var(--gray-1)' : 'transparent'};
+  position: relative;
+  border-radius: 8px;
   
-  &:last-child {
-    border-bottom: none;
+  &:hover {
+    background: var(--gray-3);
+  }
+
+  .content {
+    flex: 1;
+    padding: 4px;
   }
 
   p {
     margin: 0;
     color: var(--gray-12);
     font-size: 0.875rem;
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   small {
     display: block;
     color: var(--gray-8);
     font-size: 0.75rem;
-    margin-top: 4px;
+    margin-top: 6px;
+  }
+`;
+
+const ViewAllButton = styled.button`
+  width: 100%;
+  padding: 16px;
+  background: var(--blue-9);
+  color: white;
+  border: none;
+  border-top: 1px solid var(--gray-3);
+  cursor: pointer;
+  ${typography.body2}
+  font-weight: 500;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
+
+  &:hover {
+    background: var(--blue-10);
   }
 `;
 
@@ -294,16 +433,34 @@ interface Notification {
 const notifications: Notification[] = [
   {
     id: '1',
-    message: 'New comment on your post',
+    message: 'New comment on your post "Getting Started with React"',
     time: '5m ago',
     unread: true,
   },
   {
     id: '2',
-    message: 'You have a new follower',
+    message: 'You have a new follower: Jane Smith',
     time: '1h ago',
     unread: true,
   },
+  {
+    id: '3',
+    message: 'Your post was featured in Weekly Digest',
+    time: '2h ago',
+    unread: false,
+  },
+  {
+    id: '4',
+    message: 'Reminder: Team meeting in 30 minutes',
+    time: '3h ago',
+    unread: false,
+  },
+  {
+    id: '5',
+    message: 'Your account was successfully verified',
+    time: '4h ago',
+    unread: false,
+  }
 ];
 
 const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
@@ -322,21 +479,42 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <IconButton>
-              <Bell />
-              <NotificationBadge>2</NotificationBadge>
+              <NotificationBell />
+              <NotificationIconBadge>
+                {notifications.filter(n => n.unread).length}
+              </NotificationIconBadge>
             </IconButton>
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal>
-            <DropdownContent align="end">
-              {notifications.map((notification) => (
-                <NotificationItem key={notification.id}>
-                  <div>
-                    <p>{notification.message}</p>
-                    <small>{notification.time}</small>
-                  </div>
-                </NotificationItem>
-              ))}
+            <DropdownContent align="end" sideOffset={8}>
+              <NotificationHeader>
+                <h3>Notifications</h3>
+                <MarkAllRead title="Mark all as read">
+                  <Mail size={16} />
+                </MarkAllRead>
+              </NotificationHeader>
+              
+              <NotificationsList>
+                {notifications.map((notification) => (
+                  <NotificationWrapper key={notification.id}>
+                    <NotificationItem unread={notification.unread}>
+                      <div className="content">
+                        <p>{notification.message}</p>
+                        <small>{notification.time}</small>
+                      </div>
+                      <StatusBadge unread={notification.unread}>
+                        <Circle size={6} />
+                        {notification.unread ? 'New' : 'Read'}
+                      </StatusBadge>
+                    </NotificationItem>
+                  </NotificationWrapper>
+                ))}
+              </NotificationsList>
+
+              <ViewAllButton>
+                View All Notifications
+              </ViewAllButton>
             </DropdownContent>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>

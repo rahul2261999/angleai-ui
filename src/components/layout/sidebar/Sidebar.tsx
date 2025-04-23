@@ -206,7 +206,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             <NavItem 
               key={item.href}
               href={item.href}
-              $active={pathname === item.href}
+              $active={pathname.startsWith(item.href)}
             >
               {item.icon}
               {item.label}
