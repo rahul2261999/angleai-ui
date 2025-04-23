@@ -1,15 +1,11 @@
-'use client';
-
-import React from 'react';
 import styled from 'styled-components';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { MoreVertical, Pencil, Trash2, Info, FolderOpen } from 'lucide-react';
-import { KBFolder, ViewMode } from '@/types/kb';
-import Image from 'next/image';
 import { media } from '@/styles/breakpoints';
-import { useRouter } from 'next/navigation';
+import { DropdownMenu } from 'radix-ui';
+import { ViewMode } from '@/types/kb';
 
-const Card = styled.div<{ $view: ViewMode }>`
+
+
+export const Card = styled.div<{ $view: ViewMode }>`
   background: var(--bg-color-primary);
   border: 1px solid var(--gray-4);
   border-radius: 12px;
@@ -55,7 +51,7 @@ const Card = styled.div<{ $view: ViewMode }>`
   }
 `;
 
-const IconWrapper = styled.div<{ $view: ViewMode }>`
+export const IconWrapper = styled.div<{ $view: ViewMode }>`
   width: 52px;
   height: 52px;
   position: relative;
@@ -89,7 +85,7 @@ const IconWrapper = styled.div<{ $view: ViewMode }>`
   }
 `;
 
-const CardHeader = styled.div<{ $view: ViewMode }>`
+export const CardHeader = styled.div<{ $view: ViewMode }>`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -101,7 +97,7 @@ const CardHeader = styled.div<{ $view: ViewMode }>`
   padding: 4px;
 `;
 
-const MenuButton = styled.button`
+export const MenuButton = styled.button`
   background: none;
   border: none;
   padding: 6px;
@@ -135,7 +131,7 @@ const MenuButton = styled.button`
   }
 `;
 
-const ContentWrapper = styled.div<{ $view: ViewMode }>`
+export const ContentWrapper = styled.div<{ $view: ViewMode }>`
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -150,7 +146,7 @@ const ContentWrapper = styled.div<{ $view: ViewMode }>`
   }
 `;
 
-const MetaWrapper = styled.div<{ $view: ViewMode }>`
+export const MetaWrapper = styled.div<{ $view: ViewMode }>`
   display: flex;
   align-items: center;
   gap: 12px;
@@ -162,7 +158,7 @@ const MetaWrapper = styled.div<{ $view: ViewMode }>`
   }
 `;
 
-const FolderName = styled.h3<{ $view: ViewMode }>`
+export const FolderName = styled.h3<{ $view: ViewMode }>`
   font-size: 0.875rem;
   font-weight: 600;
   color: var(--gray-12);
@@ -178,7 +174,7 @@ const FolderName = styled.h3<{ $view: ViewMode }>`
   }
 `;
 
-const FolderInfo = styled.div<{ $view: ViewMode }>`
+export const FolderInfo = styled.div<{ $view: ViewMode }>`
   font-size: 0.75rem;
   color: var(--gray-8);
   display: flex;
@@ -203,7 +199,7 @@ const FolderInfo = styled.div<{ $view: ViewMode }>`
   }
 `;
 
-const DropdownContent = styled(DropdownMenu.Content)`
+export const DropdownContent = styled(DropdownMenu.Content)`
   min-width: 180px;
   background: var(--bg-color-primary);
   border-radius: 12px;
@@ -247,7 +243,7 @@ const DropdownContent = styled(DropdownMenu.Content)`
   }
 `;
 
-const DropdownItem = styled(DropdownMenu.Item)`
+export const DropdownItem = styled(DropdownMenu.Item)`
   all: unset;
   padding: 10px 14px;
   display: flex;
@@ -289,94 +285,3 @@ const DropdownItem = styled(DropdownMenu.Item)`
     }
   }
 `;
-
-interface FolderCardProps {
-  folder: KBFolder;
-  view: ViewMode;
-  onEdit?: (folder: KBFolder) => void;
-  onDelete?: (folder: KBFolder) => void;
-  onInfo?: (folder: KBFolder) => void;
-}
-
-const FolderCard: React.FC<FolderCardProps> = ({
-  folder,
-  view,
-  onEdit,
-  onDelete,
-  onInfo,
-}) => {
-  const router = useRouter();
-
-  const handleCardClick = () => {
-    router.push(`/dashboard/kb-manager/folder/${folder.id}`);
-  };
-
-  return (
-    <Card $view={view} onClick={handleCardClick}>
-      <IconWrapper $view={view}>
-        <Image
-          src="/assets/icons/folder.svg"
-          alt={folder.name}
-          fill
-          style={{ objectFit: 'contain' }}
-        />
-      </IconWrapper>
-
-      <ContentWrapper $view={view}>
-        <FolderName $view={view}>{folder.name}</FolderName>
-        <MetaWrapper $view={view}>
-          <FolderInfo $view={view}>
-            <span>{folder.totalDocs} docs</span>
-            <span>•</span>
-            <span>{folder.size}</span>
-          </FolderInfo>
-        </MetaWrapper>
-      </ContentWrapper>
-
-      <CardHeader $view={view}>
-        <DropdownMenu.Root>
-          <DropdownMenu.Trigger asChild>
-            <MenuButton onClick={(e) => e.stopPropagation()}>
-              <MoreVertical size={20} />
-            </MenuButton>
-          </DropdownMenu.Trigger>
-          <DropdownMenu.Portal>
-            <DropdownContent
-              onCloseAutoFocus={(e) => e.preventDefault()}
-              onClick={(e) => e.stopPropagation()}
-              sideOffset={5}
-              align="center"
-              alignOffset={0}
-              side="bottom"
-              avoidCollisions={true}
-            >
-              <DropdownItem onSelect={() => {
-                router.push(`/dashboard/kb-manager/folder/${folder.id}`);
-              }}>
-                <FolderOpen />
-                Open
-              </DropdownItem>
-              <DropdownItem onSelect={() => onEdit?.(folder)}>
-                <Pencil />
-                Edit
-              </DropdownItem>
-              <DropdownItem onSelect={() => onInfo?.(folder)}>
-                <Info />
-                Info
-              </DropdownItem>
-              <DropdownItem 
-                onSelect={() => onDelete?.(folder)}
-                data-destructive
-              >
-                <Trash2 />
-                Delete
-              </DropdownItem>
-            </DropdownContent>
-          </DropdownMenu.Portal>
-        </DropdownMenu.Root>
-      </CardHeader>
-    </Card>
-  );
-};
-
-export default FolderCard; 
