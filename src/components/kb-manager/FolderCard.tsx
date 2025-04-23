@@ -12,20 +12,22 @@ const Card = styled.div<{ $view: ViewMode }>`
   background: var(--bg-color-primary);
   border: 1px solid var(--gray-4);
   border-radius: 12px;
-  padding: ${props => props.$view === 'grid' ? '16px' : '12px 16px'};
+  padding: ${props => props.$view === 'grid' ? '20px' : '20px'};
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: ${props => props.$view === 'grid' ? '16px' : '12px'};
+  gap: 16px;
   position: relative;
   overflow: hidden;
+  height: 100px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02),
               0 4px 8px rgba(0, 0, 0, 0.02);
 
   ${media.md} {
-    padding: ${props => props.$view === 'grid' ? '20px' : '16px 24px'};
-    gap: ${props => props.$view === 'grid' ? '20px' : '16px'};
+    padding: 24px;
+    gap: 20px;
   }
 
   &:hover {
@@ -34,10 +36,6 @@ const Card = styled.div<{ $view: ViewMode }>`
                 0 8px 24px rgba(0, 0, 0, 0.05),
                 0 16px 32px rgba(0, 0, 0, 0.05);
     transform: translateY(-2px);
-    
-    &::after {
-      opacity: 1;
-    }
   }
 
   &::after {
@@ -57,23 +55,22 @@ const Card = styled.div<{ $view: ViewMode }>`
 `;
 
 const IconWrapper = styled.div<{ $view: ViewMode }>`
-  width: ${props => props.$view === 'grid' ? '44px' : '40px'};
-  height: ${props => props.$view === 'grid' ? '44px' : '40px'};
+  width: 52px;
+  height: 52px;
   position: relative;
   flex-shrink: 0;
   transition: all 0.3s ease;
   border-radius: 10px;
-  padding: 6px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-color-primary);
-  z-index: 1;
+  background: var(--gray-2);
 
   ${media.md} {
-    width: ${props => props.$view === 'grid' ? '52px' : '44px'};
-    height: ${props => props.$view === 'grid' ? '52px' : '44px'};
-    padding: 8px;
+    width: 56px;
+    height: 56px;
+    padding: 10px;
   }
 
   img {
@@ -99,7 +96,8 @@ const CardHeader = styled.div<{ $view: ViewMode }>`
   flex-shrink: 0;
   position: relative;
   z-index: 1;
-  background: var(--bg-color-primary);
+  height: 100%;
+  padding: 4px;
 `;
 
 const MenuButton = styled.button`
@@ -137,16 +135,16 @@ const MenuButton = styled.button`
 
 const ContentWrapper = styled.div<{ $view: ViewMode }>`
   display: flex;
-  flex-direction: ${props => props.$view === 'grid' ? 'column' : 'column'};
-  gap: ${props => props.$view === 'grid' ? '6px' : '8px'};
+  flex-direction: column;
+  gap: 4px;
   flex: 1;
   min-width: 0;
-  align-items: ${props => props.$view === 'list' ? 'flex-start' : 'flex-start'};
+  align-items: flex-start;
+  justify-content: center;
+  height: 100%;
 
   ${media.md} {
-    flex-direction: ${props => props.$view === 'grid' ? 'column' : 'row'};
-    gap: ${props => props.$view === 'grid' ? '8px' : '24px'};
-    align-items: ${props => props.$view === 'list' ? 'center' : 'flex-start'};
+    gap: 6px;
   }
 `;
 
@@ -158,13 +156,12 @@ const MetaWrapper = styled.div<{ $view: ViewMode }>`
   flex-wrap: wrap;
 
   ${media.md} {
-    width: auto;
     flex-wrap: nowrap;
   }
 `;
 
 const FolderName = styled.h3<{ $view: ViewMode }>`
-  font-size: ${props => props.$view === 'grid' ? '0.9375rem' : '0.875rem'};
+  font-size: 0.875rem;
   font-weight: 600;
   color: var(--gray-12);
   margin: 0;
@@ -172,13 +169,10 @@ const FolderName = styled.h3<{ $view: ViewMode }>`
   overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
+  line-height: 1.4;
 
   ${media.md} {
-    font-size: ${props => props.$view === 'grid' ? '1rem' : '0.9375rem'};
-    width: auto;
-    flex: 1;
-    min-width: 200px;
-    max-width: 300px;
+    font-size: 0.9375rem;
   }
 `;
 
@@ -189,12 +183,6 @@ const FolderInfo = styled.div<{ $view: ViewMode }>`
   gap: 8px;
   align-items: center;
   flex-shrink: 0;
-
-  ${media.md} {
-    gap: 12px;
-    min-width: 140px;
-    margin-right: 16px;
-  }
 
   span {
     display: flex;
@@ -307,11 +295,11 @@ const FolderCard: React.FC<FolderCardProps> = ({
       <ContentWrapper $view={view}>
         <FolderName $view={view}>{folder.name}</FolderName>
         <MetaWrapper $view={view}>
-          <FolderInfo $view={view}>
-            <span>{folder.totalDocs} docs</span>
-            <span>•</span>
-            <span>{folder.size}</span>
-          </FolderInfo>
+        <FolderInfo $view={view}>
+          <span>{folder.totalDocs} docs</span>
+          <span>•</span>
+          <span>{folder.size}</span>
+        </FolderInfo>
         </MetaWrapper>
       </ContentWrapper>
 

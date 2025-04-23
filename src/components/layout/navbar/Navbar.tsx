@@ -15,8 +15,8 @@ const IconButton = styled.button`
   border: none;
   cursor: pointer;
   position: relative;
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,7 +47,7 @@ const NavbarContainer = styled.nav`
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
-  z-index: 30;
+  z-index: 40;
   box-shadow: 0 2px 6px rgba(37, 39, 60, 0.04);
 
   @media (min-width: 769px) {
@@ -68,6 +68,7 @@ const SearchContainer = styled.div`
   max-width: 380px;
   margin: 0 16px;
   display: none;
+  height: 40px;
 
   @media (min-width: 640px) {
     display: block;
@@ -76,7 +77,7 @@ const SearchContainer = styled.div`
 
 const SearchInput = styled.input`
   width: 100%;
-  height: 42px;
+  height: 40px;
   padding: 0 16px 0 42px;
   border: 1px solid var(--gray-4);
   border-radius: 8px;
@@ -111,6 +112,7 @@ const NavActions = styled.div`
   display: flex;
   align-items: center;
   gap: 8px;
+  height: 40px;
 
   @media (min-width: 640px) {
     gap: 12px;
@@ -119,9 +121,15 @@ const NavActions = styled.div`
 
 const ProfileButton = styled(IconButton)`
   width: auto;
+  min-width: 40px;
+  max-width: 200px;
   padding: 0 8px 0 12px;
-  gap: 12px;
+  gap: 8px;
   background: var(--gray-2);
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  position: relative;
   
   &:hover {
     background: var(--gray-3);
@@ -132,19 +140,47 @@ const ProfileButton = styled(IconButton)`
     font-weight: 500;
     color: var(--gray-11);
     display: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    height: 20px;
+    display: flex;
+    align-items: center;
 
     @media (min-width: 640px) {
-      display: block;
+      display: flex;
+    }
+
+    &:hover::after {
+      content: attr(data-tooltip);
+      position: absolute;
+      bottom: -30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--gray-12);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      white-space: nowrap;
+      z-index: 51;
+      pointer-events: none;
     }
   }
   
   &:after {
     content: '';
     display: block;
-    width: 32px;
-    height: 32px;
+    min-width: 28px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: var(--blue-5);
+    flex-shrink: 0;
   }
 `;
 
@@ -162,6 +198,9 @@ const NotificationBadge = styled.span`
   align-items: center;
   justify-content: center;
   border: 2px solid var(--bg-color-primary);
+  font-size: 11px;
+  padding: 0;
+  line-height: 1;
 `;
 
 const DropdownContent = styled(DropdownMenu.Content)`
@@ -172,6 +211,7 @@ const DropdownContent = styled(DropdownMenu.Content)`
   box-shadow: var(--shadow-lg-primary);
   border: 1px solid var(--border-color-subtle-primary);
   animation: slideDown 0.1s ease;
+  z-index: 50;
 
   @keyframes slideDown {
     from {
@@ -227,6 +267,20 @@ const NotificationItem = styled.div`
   
   &:last-child {
     border-bottom: none;
+  }
+
+  p {
+    margin: 0;
+    color: var(--gray-12);
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  small {
+    display: block;
+    color: var(--gray-8);
+    font-size: 0.75rem;
+    margin-top: 4px;
   }
 `;
 
@@ -290,7 +344,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
             <ProfileButton>
-              <span>John Doe</span>
+              <span data-tooltip="John Doe">John Doe</span>
             </ProfileButton>
           </DropdownMenu.Trigger>
 

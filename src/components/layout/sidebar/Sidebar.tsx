@@ -196,25 +196,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
         <CloseButton onClick={onToggle}>
           <X size={24} />
         </CloseButton>
-        <Logo>
-          <h1>AngleAI</h1>
-        </Logo>
-        <NavSection>
-          <NavGroup>
-            <NavGroupTitle>Main</NavGroupTitle>
-            {navItems.map((item) => (
-              <NavItem 
-                key={item.href}
-                href={item.href}
-                $active={pathname === item.href}
-              >
-                {item.icon}
-                {item.label}
-              </NavItem>
-            ))}
-          </NavGroup>
-        </NavSection>
-      </SidebarContainer>
+      <Logo>
+        <h1>AngleAI</h1>
+      </Logo>
+      <NavSection>
+        <NavGroup>
+          <NavGroupTitle>Main</NavGroupTitle>
+          {navItems.map((item) => (
+            <NavItem 
+              key={item.href}
+              href={item.href}
+              $active={pathname === item.href}
+            >
+              {item.icon}
+              {item.label}
+            </NavItem>
+          ))}
+        </NavGroup>
+      </NavSection>
+    </SidebarContainer>
     </>
   );
 };

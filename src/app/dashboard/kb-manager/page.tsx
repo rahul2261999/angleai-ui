@@ -17,7 +17,7 @@ const Header = styled.div`
 
   ${media.md} {
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
   }
 `;
@@ -48,6 +48,7 @@ const HeaderRight = styled.div`
 
   ${media.md} {
     gap: 16px;
+    flex-wrap: nowrap;
   }
 `;
 
@@ -72,6 +73,7 @@ const ViewToggle = styled.div`
 
   ${media.md} {
     margin-right: 0;
+    order: 2;
   }
 `;
 
@@ -135,30 +137,37 @@ const CreateButton = styled.button`
 
 const Content = styled.div<{ $view: ViewMode }>`
   margin-top: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: ${props => props.$view === 'grid' ? '16px' : '12px'};
+  width: 100%;
 
   ${props => props.$view === 'grid' && `
     display: grid;
     gap: 16px;
-    
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+
     ${media.sm} {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
       gap: 20px;
     }
-    
+
     ${media.md} {
-      grid-template-columns: repeat(3, 1fr);
-    }
-    
-    ${media.lg} {
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
       gap: 24px;
     }
-    
-    ${media.xl} {
-      grid-template-columns: repeat(4, 1fr);
+
+    ${media.lg} {
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     }
+
+    ${media.xl} {
+      grid-template-columns: repeat(auto-fill, minmax(440px, 1fr));
+      gap: 28px;
+    }
+  `}
+
+  ${props => props.$view === 'list' && `
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   `}
 `;
 
