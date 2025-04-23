@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Bell, User, Settings, LogOut, Search, Menu, Mail, Circle } from 'lucide-react';
 import { typography } from '@/styles/typography';
+import { breakpoints } from '@/styles/breakpoints';
 
 interface NavbarProps {
   onMenuClick: () => void;
@@ -195,7 +196,7 @@ const NotificationIconBadge = styled.span`
   font-weight: 500;
 `;
 
-const StatusBadge = styled.span<{ unread: boolean }>`
+const StatusBadge = styled.span<{ $unread: boolean }>`
   display: flex;
   align-items: center;
   gap: 4px;
@@ -203,18 +204,20 @@ const StatusBadge = styled.span<{ unread: boolean }>`
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 500;
-  background: ${props => props.unread ? 'var(--blue-2)' : 'var(--gray-2)'};
-  color: ${props => props.unread ? 'var(--blue-9)' : 'var(--gray-9)'};
+  background: ${props => props.$unread ? 'var(--blue-2)' : 'var(--gray-2)'};
+  color: ${props => props.$unread ? 'var(--blue-9)' : 'var(--gray-9)'};
   white-space: nowrap;
   transition: all 0.2s ease;
 
   &:hover {
-    background: ${props => props.unread ? 'var(--blue-3)' : 'var(--gray-3)'};
+    background: ${props => props.$unread ? 'var(--blue-3)' : 'var(--gray-3)'};
   }
 `;
 
 const DropdownContent = styled(DropdownMenu.Content)`
   min-width: 220px;
+  max-width: calc(100vw - 32px);
+  width: 100%;
   background: var(--bg-color-primary);
   border-radius: 12px;
   padding: 8px;
@@ -223,6 +226,14 @@ const DropdownContent = styled(DropdownMenu.Content)`
   animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 50;
   overflow: hidden;
+
+  @media (min-width: ${breakpoints.sm}px) {
+    width: 380px;
+  }
+
+  @media (min-width: ${breakpoints.md}px) {
+    width: 420px;
+  }
 
   @keyframes slideDown {
     from {
@@ -332,7 +343,10 @@ const MarkAllRead = styled.button`
 `;
 
 const NotificationsList = styled.div`
-  max-height: 480px;
+  max-height: 60vh;
+  @media (min-width: ${breakpoints.sm}px) {
+    max-height: 480px;
+  }
   overflow-y: auto;
   padding: 8px 0;
   background: var(--bg-color-primary);
@@ -368,14 +382,14 @@ const NotificationWrapper = styled.div`
   }
 `;
 
-const NotificationItem = styled.div<{ unread: boolean }>`
+const NotificationItem = styled.div<{ $unread: boolean }>`
   padding: 12px;
   display: flex;
   align-items: flex-start;
   gap: 16px;
   cursor: pointer;
   transition: all 0.2s ease;
-  background: ${props => props.unread ? 'var(--gray-1)' : 'transparent'};
+  background: ${props => props.$unread ? 'var(--gray-1)' : 'transparent'};
   position: relative;
   border-radius: 8px;
   
@@ -498,12 +512,12 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
               <NotificationsList>
                 {notifications.map((notification) => (
                   <NotificationWrapper key={notification.id}>
-                    <NotificationItem unread={notification.unread}>
+                    <NotificationItem $unread={notification.unread}>
                       <div className="content">
                         <p>{notification.message}</p>
                         <small>{notification.time}</small>
                       </div>
-                      <StatusBadge unread={notification.unread}>
+                      <StatusBadge $unread={notification.unread}>
                         <Circle size={6} />
                         {notification.unread ? 'New' : 'Read'}
                       </StatusBadge>
