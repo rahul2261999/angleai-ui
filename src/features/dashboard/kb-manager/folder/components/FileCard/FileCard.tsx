@@ -1,12 +1,22 @@
-'use client';
+"use client";
 
-import React from 'react';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { MoreVertical, Pencil, Trash2, Info } from 'lucide-react';
-import FileIcon from '@/components/ui/icons/FileIcons';
-import { Card, IconWrapper, ContentWrapper, FileName, FileInfo, CardHeader, MenuButton, DropdownContent, DropdownItem } from './filecard.style.';
-import { Document } from '../../type';
-
+import React from "react";
+import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { MoreVertical, Pencil, Trash2, Info, Download } from "lucide-react";
+import FileIcon from "@/components/ui/icons/FileIcons";
+import {
+  Card,
+  IconWrapper,
+  ContentWrapper,
+  FileName,
+  FileInfo,
+  CardHeader,
+  MenuButton,
+  DropdownContent,
+  DropdownItem,
+} from "./filecard.style.";
+import { Document } from "../../type";
+import { SeparatorRoot } from "@/components/ui/seprator/style";
 
 interface FileCardProps {
   document: Document;
@@ -15,12 +25,16 @@ interface FileCardProps {
   onInfo?: () => void;
 }
 
-const FileCard: React.FC<FileCardProps> = ({ document, onDelete, onRename, onInfo }) => {
-
+const FileCard: React.FC<FileCardProps> = ({
+  document,
+  onDelete,
+  onRename,
+  onInfo,
+}) => {
   return (
     <Card>
       <IconWrapper>
-        <FileIcon type={document.extension || ''} size={32} />
+        <FileIcon type={document.extension || ""} size={32} />
       </IconWrapper>
 
       <ContentWrapper>
@@ -53,14 +67,16 @@ const FileCard: React.FC<FileCardProps> = ({ document, onDelete, onRename, onInf
                 <Pencil />
                 Edit
               </DropdownItem>
+              <DropdownItem onSelect={() => {}}>
+                <Download />
+                Download
+              </DropdownItem>
               <DropdownItem onSelect={() => onInfo?.()}>
                 <Info />
                 Info
               </DropdownItem>
-              <DropdownItem 
-                onSelect={() => onDelete?.()}
-                data-destructive
-              >
+              <SeparatorRoot orientation="horizontal" />
+              <DropdownItem onSelect={() => onDelete?.()} data-destructive>
                 <Trash2 />
                 Delete
               </DropdownItem>
@@ -72,4 +88,4 @@ const FileCard: React.FC<FileCardProps> = ({ document, onDelete, onRename, onInf
   );
 };
 
-export default FileCard; 
+export default FileCard;

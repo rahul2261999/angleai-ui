@@ -232,7 +232,7 @@ const DropdownContent = styled(DropdownMenu.Content)`
   }
 
   @media (min-width: ${breakpoints.md}px) {
-    width: 420px;
+    width: 220px;
   }
 
   @keyframes slideDown {
