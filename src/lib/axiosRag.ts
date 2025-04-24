@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const axiosRag = axios.create({
-  baseURL: 'http://localhost:8000/rag/api',
+  baseURL: process.env.NEXT_PUBLIC_RAG_SERVICE_BASE_URL,
   headers: {
     'Content-Type': 'application/json'
   }
