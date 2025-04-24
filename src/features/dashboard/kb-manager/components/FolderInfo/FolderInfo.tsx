@@ -2,9 +2,9 @@
 
 import React from 'react';
 
-import { KBFolder } from '@/types/kb-manager';
 import Image from 'next/image';
 import { Header, IconWrapper, Title, SectionTitle, InfoGrid, InfoItem, InfoLabel, InfoValue, Section } from './folderinfo.style';
+import { KBFolder } from '../../type';
 
 
 

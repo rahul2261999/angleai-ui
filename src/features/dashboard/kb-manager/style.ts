@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { media } from '@/styles/breakpoints';
-import { ViewMode } from '@/types/kb-manager';
+import { ViewMode } from './type';
 
 
 export const Header = styled.div`

@@ -2,11 +2,11 @@
 
 import React from 'react';
 import { MoreVertical, Pencil, Trash2, Info, FolderOpen } from 'lucide-react';
-import { KBFolder, ViewMode } from '@/types/kb-manager';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DropdownMenu } from 'radix-ui';
 import { Card, IconWrapper, ContentWrapper, FolderName, MetaWrapper, FolderInfo, CardHeader, MenuButton, DropdownContent, DropdownItem } from './foldercard.style';
+import { KBFolder, ViewMode } from '../../type';
 
 
 interface FolderCardProps {

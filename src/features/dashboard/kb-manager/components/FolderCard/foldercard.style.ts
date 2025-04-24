@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { media } from '@/styles/breakpoints';
 import { DropdownMenu } from 'radix-ui';
-import { ViewMode } from '@/types/kb-manager';
+import { ViewMode } from '../../type';
 
 
 

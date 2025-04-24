@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
+    "lint": "next lint",
+
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    
+    "dev": "next dev --turbopack",
+    "staging": "npm run build && npm run dev"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",

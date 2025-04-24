@@ -13,6 +13,7 @@ const primary = Montserrat({
   display: "swap",
   variable: "--font-primary",
   preload: true,
+  subsets: ['latin']
 });
 
 export default function RootLayout({
