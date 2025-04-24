@@ -1,4 +1,4 @@
-export interface RagBaseError {
+export interface BaseError {
   tracingId: string,
   statusCode: number,
   message: string,

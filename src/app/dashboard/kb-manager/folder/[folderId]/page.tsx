@@ -1,4 +1,4 @@
-import { FolderContent } from "@/features/dashboard/kb-manager/components/FolderContent/FolderContent";
+import { FolderContent } from "@/features/dashboard/kb-manager/folder/page";
 
 interface PageProps {
   params: Promise<{

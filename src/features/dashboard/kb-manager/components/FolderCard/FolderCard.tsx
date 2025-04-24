@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { MoreVertical, Pencil, Trash2, Info, FolderOpen } from 'lucide-react';
-import { KBFolder, ViewMode } from '@/types/kb';
+import { KBFolder, ViewMode } from '@/types/kb-manager';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { DropdownMenu } from 'radix-ui';

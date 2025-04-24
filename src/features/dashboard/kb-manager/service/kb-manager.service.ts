@@ -1,7 +1,7 @@
 import { axiosRag } from "@/lib/axiosRag"
 import { CreateKb, KbFolderRes } from "./kb-manager.type"
 import { RagBaseResponse } from "@/types/response";
-import { RagBaseError } from "@/types/error";
+import { BaseError } from "@/types/error";
 import axios from "axios";
 
 export const getAllKb = async (tenantId: string) => {
@@ -12,7 +12,7 @@ export const getAllKb = async (tenantId: string) => {
     if (axios.isAxiosError(error)) {
       // If it's an axios error with response data, throw the typed error
       if (error.response?.data) {
-        throw error.response.data as RagBaseError;
+        throw error.response.data as BaseError;
       }
       // If it's an axios error without response data, create a generic error
       throw {
@@ -22,7 +22,7 @@ export const getAllKb = async (tenantId: string) => {
         error: [],
         timestamp: new Date().toISOString(),
         path: `/v1/${tenantId}/knowledgebases`
-      } as RagBaseError;
+      } as BaseError;
     }
     // If it's an unknown error, create a generic error response
     throw {
@@ -32,7 +32,7 @@ export const getAllKb = async (tenantId: string) => {
       error: [],
       timestamp: new Date().toISOString(),
       path: `/v1/${tenantId}/knowledgebases`
-    } as RagBaseError;
+    } as BaseError;
   }
 }
 

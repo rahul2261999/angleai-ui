@@ -1,10 +1,8 @@
 import { useState, useEffect } from "react";
 import { Grid2X2, List, Plus } from "lucide-react";
 import Layout from "@/components/layout/Layout";
-import { FileInfo, KBFolder, ViewMode } from "@/types/kb";
 import SideSlider from "@/components/ui/dialog/SideSlider";
 import FolderCard from "@/features/dashboard/kb-manager/components/FolderCard/FolderCard";
-import FolderInfo from "@/features/dashboard/kb-manager/components/FolderInfo/FolderInfo";
 import {
   createKb,
   deleteKbById,
@@ -13,7 +11,7 @@ import {
   updaeKb,
 } from "./service/kb-manager.service";
 import { useToast } from "@/components/ui/toast";
-import { RagBaseError } from "@/types/error";
+import { BaseError } from "@/types/error";
 import { CreateEditKb } from "./components/CreateEditKb/CreateEditKb";
 import {
   Header,
@@ -25,10 +23,13 @@ import {
   CreateButton,
   Content,
 } from "./style";
+import FolderInfo from "./components/FolderInfo/FolderInfo";
+import { KBFolder, ViewMode } from "./type";
+import { Document } from "./folder/type";
 
 interface ItemInfo {
   type: "folder" | "file";
-  data: KBFolder | FileInfo;
+  data: KBFolder | Document;
 }
 
 const tenantId = "047f5937-b5c5-455c-bd53-ad456bbe013f";
@@ -60,7 +61,7 @@ export const KBManager = () => {
 
       setKbFolders(folders);
     } catch (error) {
-      const err = error as RagBaseError;
+      const err = error as BaseError;
       toast.error({
         title: `Error (${err.statusCode})`,
         description: err.message || "An unexpected error occurred",
@@ -99,7 +100,7 @@ export const KBManager = () => {
         duration: 3000,
       });
     } catch (error) {
-      const err = error as RagBaseError;
+      const err = error as BaseError;
       toast.error({
         title: "Error",
         description: err.message || "Failed to create knowledge base",
@@ -110,7 +111,7 @@ export const KBManager = () => {
 
   const handleShowInfo = (
     type: "folder" | "file",
-    data: KBFolder | FileInfo
+    data: KBFolder | Document
   ) => {
     setSelectedItem({ type, data });
     setShowInfo(true);
@@ -151,7 +152,7 @@ export const KBManager = () => {
         duration: 3000,
       });
     } catch (error) {
-      const err = error as RagBaseError;
+      const err = error as BaseError;
       toast.error({
         title: "Error",
         description: err.message || "Failed to update knowledge base",
@@ -176,7 +177,7 @@ export const KBManager = () => {
         duration: 3000,
       });
     } catch (error) {
-      const err = error as RagBaseError;
+      const err = error as BaseError;
       toast.error({
         title: "Error",
         description: err.message || "Failed to delete knowledge base",

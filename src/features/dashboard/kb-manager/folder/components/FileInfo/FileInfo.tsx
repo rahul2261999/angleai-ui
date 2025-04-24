@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { FileType } from "@/types/file";
 import FileIcon from "@/components/ui/icons/FileIcons";
 import {
   Header,
@@ -14,22 +13,22 @@ import {
   InfoValue,
   Section,
 } from "./fileinfo.style";
-import { formatFileSize } from "@/utils/helper";
+import { Document } from "../../type";
 
 interface FileInfoProps {
-  file: FileType | null;
+  document: Document | null;
 }
 
-const FileInfo: React.FC<FileInfoProps> = ({ file }) => {
-  if (!file) return null;
+const FileInfo: React.FC<FileInfoProps> = ({ document }) => {
+  if (!document) return null;
 
   return (
     <>
       <Header>
         <IconWrapper>
-          <FileIcon type={file.type || ""} size={40} />
+          <FileIcon type={document.extension || ""} size={40} />
         </IconWrapper>
-        <Title>{file.name}</Title>
+        <Title>{document.name}</Title>
       </Header>
 
       <Section>
@@ -38,24 +37,22 @@ const FileInfo: React.FC<FileInfoProps> = ({ file }) => {
           <InfoItem>
             <InfoLabel>Created</InfoLabel>
             <InfoValue>
-              {new Date(file.createdAt).toLocaleDateString()}
+              {new Date(document.createdAt).toLocaleDateString()}
             </InfoValue>
           </InfoItem>
           <InfoItem>
             <InfoLabel>Modified</InfoLabel>
             <InfoValue>
-              {new Date(file.updatedAt).toLocaleDateString()}
+              {new Date(document.updatedAt).toLocaleDateString()}
             </InfoValue>
           </InfoItem>
           <InfoItem>
             <InfoLabel>Size</InfoLabel>
-            <InfoValue>
-              {file.size ? formatFileSize(file.size) : "Unknown"}
-            </InfoValue>
+            <InfoValue>              {document.size}            </InfoValue>
           </InfoItem>
           <InfoItem>
             <InfoLabel>Type</InfoLabel>
-            <InfoValue>{file.type?.toUpperCase() || "Unknown"}</InfoValue>
+            <InfoValue>{document.extension?.toUpperCase() || "Unknown"}</InfoValue>
           </InfoItem>
         </InfoGrid>
       </Section>
