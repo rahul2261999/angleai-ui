@@ -1,0 +1,13 @@
+.file-card-hover:hover {
+  background-color: var(--gray-2);
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.menu-button-hover:hover {
+  background-color: var(--gray-3);
+}
+
+.file-card-hover {
+  transition: all 0.2s ease-in-out;
+} 
