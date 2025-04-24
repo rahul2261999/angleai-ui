@@ -99,6 +99,7 @@ export const SubmitButton = styled.button`
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  text-align: center;
 
   &:hover {
     background-color: var(--blue-10);

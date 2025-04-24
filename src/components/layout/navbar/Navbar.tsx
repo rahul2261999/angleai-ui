@@ -214,10 +214,7 @@ const StatusBadge = styled.span<{ $unread: boolean }>`
   }
 `;
 
-const DropdownContent = styled(DropdownMenu.Content)`
-  min-width: 220px;
-  max-width: calc(100vw - 32px);
-  width: 100%;
+const BaseDropdownContent = styled(DropdownMenu.Content)`
   background: var(--bg-color-primary);
   border-radius: 12px;
   padding: 8px;
@@ -226,14 +223,6 @@ const DropdownContent = styled(DropdownMenu.Content)`
   animation: slideDown 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 50;
   overflow: hidden;
-
-  @media (min-width: ${breakpoints.sm}px) {
-    width: 380px;
-  }
-
-  @media (min-width: ${breakpoints.md}px) {
-    width: 220px;
-  }
 
   @keyframes slideDown {
     from {
@@ -245,6 +234,24 @@ const DropdownContent = styled(DropdownMenu.Content)`
       transform: translateY(0) scale(1);
     }
   }
+`;
+
+const NotificationDropdownContent = styled(BaseDropdownContent)`
+  min-width: 220px;
+  max-width: calc(100vw - 32px);
+  width: 100%;
+
+  @media (min-width: ${breakpoints.sm}px) {
+    width: 380px;
+  }
+
+  @media (min-width: ${breakpoints.md}px) {
+    width: 420px;
+  }
+`;
+
+const ProfileDropdownContent = styled(BaseDropdownContent)`
+  width: 220px;
 `;
 
 const DropdownItem = styled(DropdownMenu.Item)`
@@ -501,7 +508,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal>
-            <DropdownContent align="end" sideOffset={8}>
+            <NotificationDropdownContent align="end" sideOffset={8}>
               <NotificationHeader>
                 <h3>Notifications</h3>
                 <MarkAllRead title="Mark all as read">
@@ -529,7 +536,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
               <ViewAllButton>
                 View All Notifications
               </ViewAllButton>
-            </DropdownContent>
+            </NotificationDropdownContent>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
 
@@ -541,7 +548,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
           </DropdownMenu.Trigger>
 
           <DropdownMenu.Portal>
-            <DropdownContent align="end">
+            <ProfileDropdownContent align="end" sideOffset={8}>
               <DropdownItem>
                 <User />
                 Profile
@@ -555,7 +562,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                 <LogOut />
                 Logout
               </DropdownItem>
-            </DropdownContent>
+            </ProfileDropdownContent>
           </DropdownMenu.Portal>
         </DropdownMenu.Root>
       </NavActions>
