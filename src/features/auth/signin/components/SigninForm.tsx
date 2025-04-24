@@ -24,8 +24,10 @@ import {
   SocialButton,
   InputIcon,
   PasswordToggleButton
-} from './styles';
+} from '../styles';
 import Link from 'next/link';
+import userMock from '@/utils/mock/user.mock.json'
+import { useRouter } from 'next/navigation';
 
 const signinSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -43,11 +45,15 @@ export function SigninForm() {
   } = useForm<SigninFormData>({
     resolver: zodResolver(signinSchema),
   });
+  const router = useRouter()
 
   const onSubmit = async (data: SigninFormData) => {
     try {
-      // Handle signin logic here
-      console.log(data);
+      const user = userMock.find(user => user.email === data.email);
+
+      if(user) {
+        router.replace('/dashboard/analytics')
+      }
     } catch (error) {
       console.error('Signin error:', error);
     }

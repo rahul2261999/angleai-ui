@@ -21,7 +21,7 @@ const Root = styled.div<{ open: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 21;
+  z-index: 9999;
 
   width: 100%;
   height: 100%;
@@ -29,33 +29,34 @@ const Root = styled.div<{ open: boolean }>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  transition: visibility 0.2s ease;
 `;
 
-const DialogOverlay = styled.div`
+const DialogOverlay = styled.div<{ $open: boolean }>`
   position: absolute;
   top: 0;
-
   width: 100%;
   height: 100%;
-
   background-color: var(--bg-color-solid-primary);
-  opacity: 0.2;
+  opacity: ${props => props.$open ? 0.2 : 0};
+  transition: opacity 0.2s ease;
 `;
 
-const DialogContainer = styled.div`
-  position: absolute;
-
+const DialogContainer = styled.div<{ $open: boolean }>`
+  position: relative;
   width: 500px;
   padding: 1.5rem;
-
   background-color: var(--contrast-primary);
   border-radius: var(--border-radius);
-
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-
   box-shadow: var(--shadow-lg-primary);
+  
+  opacity: ${props => props.$open ? 1 : 0};
+  transform: scale(${props => props.$open ? 1 : 0.95});
+  transition: all 0.2s ease;
 `;
 
 const DialogHeader = styled.div`
@@ -89,15 +90,27 @@ const DialogFooter = styled.div`
 `;
 
 const CustomDialog: React.FC<ICustomDialog> = (props) => {
-  const actionButton = props.buttons.map((btn, index) => (
-    <Button key={index} {...btn} />
-  ));
+  const actionButton = props.buttons.map((btn, index) => {
+    // For cancel/close buttons, ensure hover color stays gray
+    if (btn.text.toLowerCase() === "cancel") {
+      return (
+        <Button
+          key={index}
+          {...btn}
+          backgroundColorHover="var(--gray-6)"
+          backgroundColorActive="var(--gray-7)"
+        />
+      );
+    }
+    return <Button key={index} {...btn} />;
+  });
+
   return (
     <Root open={props.open}>
-      <DialogOverlay />
-      <DialogContainer>
+      <DialogOverlay $open={props.open} />
+      <DialogContainer $open={props.open}>
         <DialogHeader>
-          <DialogTitle>Header Title</DialogTitle>
+          <DialogTitle>{props.title}</DialogTitle>
           <CloseButton onClick={props.close} />
         </DialogHeader>
         <DialogBody>{props.children}</DialogBody>

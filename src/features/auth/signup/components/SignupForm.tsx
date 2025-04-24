@@ -1,6 +1,6 @@
 'use client';
 
-import { useSignupForm } from '@/features/auth/hooks/useSignupForm';
+import { useSignupForm } from '@/features/auth/signup/hooks/useSignupForm';
 import {
   Form,
   FormGroup,
@@ -8,7 +8,7 @@ import {
   Input,
   ErrorMessage,
   SubmitButton
-} from './styles';
+} from '../styles';
 
 export const SignupForm = () => {
   const { form, onSubmit } = useSignupForm();

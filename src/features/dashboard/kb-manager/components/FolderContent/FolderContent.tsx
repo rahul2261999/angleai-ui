@@ -7,8 +7,8 @@ import { ViewMode, KBFolder } from "@/types/kb";
 
 import { FileType } from "@/types/file";
 import SideSlider from "@/components/ui/dialog/SideSlider";
-import FileCard from "@/features/dashboard/kb-manager/components/FileCard/FileCard";
-import FileInfo from "@/features/dashboard/kb-manager/components/FileInfo/FileInfo";
+import FileCard from "@/features/dashboard/kb-manager/folder/components/FileCard/FileCard";
+import FileInfo from "@/features/dashboard/kb-manager/folder/components/FileInfo/FileInfo";
 import {
   BackButton,
   Header,

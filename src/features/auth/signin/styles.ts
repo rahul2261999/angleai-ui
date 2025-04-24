@@ -7,16 +7,13 @@ export const SigninContainer = styled.div`
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
-  background-color: var(--gray-2);
+  background-color: #ffffff;
 `;
 
 export const SigninCard = styled.div`
   width: 100%;
   max-width: 420px;
   padding: 2.5rem;
-  background: var(--contrast-primary);
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
   display: flex;
   flex-direction: column;
   align-items: center;
