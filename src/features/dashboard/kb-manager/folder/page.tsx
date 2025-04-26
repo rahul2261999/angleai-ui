@@ -7,6 +7,7 @@ import Layout from "@/components/layout/Layout";
 import SideSlider from "@/components/ui/dialog/SideSlider";
 import FileCard from "@/features/dashboard/kb-manager/folder/components/FileCard/FileCard";
 import FileInfo from "@/features/dashboard/kb-manager/folder/components/FileInfo/FileInfo";
+import AddEditDocument from "@/features/dashboard/kb-manager/folder/components/document-dialog/AddEditDocument";
 import {
   BackButton,
   Header,
@@ -23,7 +24,7 @@ import { Document } from "./type";
 import { getKbById } from "../service/kb-manager.service";
 import { BaseError } from "@/types/error";
 import { useToast } from "@/components/ui/toast";
-import { getAllDocuments } from "./services/document.service";
+import { getAllDocuments, uploadDocument } from "./services/document.service";
 import { formatFileSize, getExtension } from "@/utils/helper";
 
 interface FolderContentProps {
@@ -38,6 +39,8 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
   const [selectedFolder, setSelectedFolder] = React.useState<KBFolder | null>(null);
   const [documents, setDocuments] = React.useState<Document[]>([]);
   const [selectedFile, setSelectedFile] = React.useState<Document | null>(null);
+  const [showDocumentDialog, setShowDocumentDialog] = React.useState(false);
+  const [documentDialogMode, setDocumentDialogMode] = React.useState<'add' | 'edit' | 'view'>('add');
   const toast = useToast();
 
   const fetchKbFolders = async () => {
@@ -78,6 +81,7 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
         id: document.id,
         name: document.name,
         size: formatFileSize(document.size),
+        tag: document.tag,
         extension: getExtension(document.name),
         createdAt: document.createdAt,
         updatedAt: document.updatedAt,
@@ -101,13 +105,18 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
   }, []);
 
   const handleCreateFile = () => {
-    // Implement file creation logic
-    console.log("Create file clicked");
+    setDocumentDialogMode('add');
+    setSelectedFile(null);
+    setShowDocumentDialog(true);
   };
 
   const handleEditFile = (fileId: string) => {
-    // Implement file edit logic
-    console.log("Edit file:", fileId);
+    const fileToEdit = documents.find(doc => doc.id === fileId);
+    if (fileToEdit) {
+      setSelectedFile(fileToEdit);
+      setDocumentDialogMode('edit');
+      setShowDocumentDialog(true);
+    }
   };
 
   const handleDeleteFile = (fileId: string) => {
@@ -118,6 +127,39 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
   const handleShowInfo = (file: Document) => {
     setSelectedFile(file);
     setShowInfo(true);
+  };
+
+  const handleDocumentSubmit = async (data: { file: File; tag: string }) => {
+    try {
+      if (documentDialogMode === 'add') {
+        const formData = new FormData();
+        formData.append('file', data.file);
+        formData.append('tag', data.tag);
+
+        await uploadDocument(tenantId, folderId, formData);
+        await fetchKbFiles(); // Refresh the file list
+      } else if (documentDialogMode === 'edit') {
+        // TODO: Implement file update logic when API is available
+        console.log('Updating file:', data);
+      }
+      
+      setShowDocumentDialog(false);
+
+      toast.success({
+        title: `File ${documentDialogMode === 'add' ? 'uploaded' : 'updated'} successfully`,
+        description: documentDialogMode === 'add' 
+          ? 'Your file has been uploaded successfully'
+          : 'Your file has been updated successfully',
+        duration: 3000,
+      });
+    } catch (error) {
+      const err = error as BaseError;
+      toast.error({
+        title: `Error (${err.statusCode})`,
+        description: err.message || "An unexpected error occurred",
+        duration: 5000,
+      });
+    }
   };
 
   if (!selectedFolder) {
@@ -176,7 +218,7 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
             key={document.id}
             document={document}
             onDelete={() => handleDeleteFile(document.id)}
-            onRename={() => handleEditFile(document.id)}
+            onEdit={() => handleEditFile(document.id)}
             onInfo={() => handleShowInfo(document)}
           />
         ))}
@@ -185,6 +227,17 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
       <SideSlider open={showInfo} onOpenChange={() => setShowInfo(false)}>
         <FileInfo document={selectedFile} />
       </SideSlider>
+
+      <AddEditDocument
+        open={showDocumentDialog}
+        mode={documentDialogMode}
+        initialData={documentDialogMode === 'edit' ? {
+          file: undefined, // We can't pass the file object since we don't have it
+          tag: selectedFile?.tag || '' // Using name as tag for now, update this based on your data structure
+        } : undefined}
+        onClose={() => setShowDocumentDialog(false)}
+        onSubmit={handleDocumentSubmit}
+      />
     </Layout>
   );
 };

@@ -21,14 +21,14 @@ import { SeparatorRoot } from "@/components/ui/seprator/style";
 interface FileCardProps {
   document: Document;
   onDelete?: () => void;
-  onRename?: () => void;
+  onEdit?: () => void;
   onInfo?: () => void;
 }
 
 const FileCard: React.FC<FileCardProps> = ({
   document,
   onDelete,
-  onRename,
+  onEdit,
   onInfo,
 }) => {
   return (
@@ -63,7 +63,7 @@ const FileCard: React.FC<FileCardProps> = ({
               side="bottom"
               avoidCollisions={true}
             >
-              <DropdownItem onSelect={() => onRename?.()}>
+              <DropdownItem onSelect={() => onEdit?.()}>
                 <Pencil />
                 Edit
               </DropdownItem>

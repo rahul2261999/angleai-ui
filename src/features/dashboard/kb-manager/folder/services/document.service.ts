@@ -7,10 +7,11 @@ import { errorHandler } from "@/utils/helper";
 
 export const uploadDocument = async (
   tenantId: string,
+  knowledgebaseId: string,
   body: FormData
 ) => {
   try {
-    const res = await axiosRag.post<RagBaseResponse<KbDocumentRes>>(`/v1/${tenantId}/knowledgebases/document`, body , {
+    const res = await axiosRag.post<RagBaseResponse<KbDocumentRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document`, body , {
       headers: {
         'Content-Type': 'multipart/form-data'
       }

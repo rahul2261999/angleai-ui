@@ -5,6 +5,7 @@ export interface KbDocumentRes {
   name: string;
   size: number;
   processingStatus: string;
+  tag: string;
   status: string;
   createdAt: string;
   updatedAt: string
