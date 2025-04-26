@@ -24,7 +24,7 @@ import { Document } from "./type";
 import { getKbById } from "../service/kb-manager.service";
 import { BaseError } from "@/types/error";
 import { useToast } from "@/components/ui/toast";
-import { getAllDocuments, uploadDocument } from "./services/document.service";
+import { deleteDocumentById, getAllDocuments, uploadDocument } from "./services/document.service";
 import { formatFileSize, getExtension } from "@/utils/helper";
 
 interface FolderContentProps {
@@ -119,9 +119,15 @@ export const FolderContent: React.FC<FolderContentProps> = ({ folderId }) => {
     }
   };
 
-  const handleDeleteFile = (fileId: string) => {
-    // Implement file delete logic
-    console.log("Delete file:", fileId);
+  const handleDeleteFile = async (fileId: string) => {
+    await deleteDocumentById(tenantId, folderId, fileId);
+    setDocuments(documents.filter(doc => doc.id !== fileId));
+
+    toast.success({
+      title: `Document deleted successfully`,
+      description: `The document has been deleted successfully`,
+      duration: 3000,
+    });
   };
 
   const handleShowInfo = (file: Document) => {

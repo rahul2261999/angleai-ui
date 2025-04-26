@@ -57,10 +57,10 @@ const FileCard: React.FC<FileCardProps> = ({
             <DropdownContent
               onCloseAutoFocus={(e) => e.preventDefault()}
               onClick={(e) => e.stopPropagation()}
-              sideOffset={5}
+              sideOffset={0}
               align="center"
-              alignOffset={0}
               side="bottom"
+              sticky="always"
               avoidCollisions={true}
             >
               <DropdownItem onSelect={() => onEdit?.()}>

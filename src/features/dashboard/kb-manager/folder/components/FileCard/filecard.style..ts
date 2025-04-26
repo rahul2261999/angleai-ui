@@ -177,8 +177,6 @@ export const DropdownContent = styled(DropdownMenu.Content)`
   padding: 8px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   border: 1px solid var(--gray-4);
-  z-index: 9999;
-  position: absolute;
   transform-origin: var(--radix-dropdown-menu-content-transform-origin);
   will-change: transform, opacity;
   animation: none;
