@@ -91,6 +91,22 @@ export const Input = styled.input`
   &[type="password"] {
     padding-right: 2.5rem;
   }
+
+  /* Fix autofill styles */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--gray-12) !important;
+    -webkit-box-shadow: 0 0 0 30px var(--gray-2) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* For Firefox */
+  &:autofill {
+    background-color: var(--gray-2) !important;
+    color: var(--gray-12) !important;
+  }
 `;
 
 export const InputIcon = styled.div`
@@ -126,9 +142,20 @@ export const PasswordToggleButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.2s ease;
 
   &:hover {
     color: var(--gray-11);
+  }
+
+  &:focus {
+    outline: none;
+    color: var(--blue-9);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
   }
 `;
 
@@ -161,6 +188,19 @@ export const SubmitButton = styled.button`
   &:disabled {
     opacity: 0.7;
     cursor: not-allowed;
+  }
+
+  svg {
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
   }
 `;
 

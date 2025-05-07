@@ -2,7 +2,7 @@ import { CheckIcon, Cross1Icon } from "@radix-ui/react-icons";
 import styled from "styled-components";
 
 interface PasswordRequirementProps {
-  isMet: boolean;
+  'data-met': boolean;
 }
 
 const RequirementsList = styled.ul`
@@ -19,7 +19,7 @@ const RequirementItem = styled.li<PasswordRequirementProps>`
   align-items: center;
   gap: 0.5rem;
   font-size: 0.75rem;
-  color: ${props => props.isMet ? 'var(--green-9)' : 'var(--gray-8)'};
+  color: ${props => props['data-met'] ? 'var(--green-9)' : 'var(--gray-8)'};
   transition: color 0.2s ease;
 `;
 
@@ -61,7 +61,10 @@ export const PasswordRequirements = ({ password, isVisible }: PasswordRequiremen
   return (
     <RequirementsList>
       {requirements.map((requirement, index) => (
-        <RequirementItem key={index} isMet={requirement.isMet}>
+        <RequirementItem 
+          key={index} 
+          data-met={requirement.isMet}
+        >
           {requirement.isMet ? (
             <CheckIcon color="var(--green-9)" />
           ) : (

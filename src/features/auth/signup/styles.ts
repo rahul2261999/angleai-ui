@@ -80,6 +80,22 @@ export const Input = styled.input`
   &::placeholder {
     color: var(--gray-7);
   }
+
+  /* Fix autofill styles */
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    -webkit-text-fill-color: var(--gray-12) !important;
+    -webkit-box-shadow: 0 0 0 30px var(--gray-2) inset !important;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+
+  /* For Firefox */
+  &:autofill {
+    background-color: var(--gray-2) !important;
+    color: var(--gray-12) !important;
+  }
 `;
 
 export const ErrorMessage = styled.span`

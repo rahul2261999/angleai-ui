@@ -1,10 +1,10 @@
-export interface Signup {
+export interface SignupRequest {
   email: string;
   password: string;
   confirmPassword: string;
 }
 
-export interface SignIn {
+export interface SignInRequest {
   email: string;
   password: string;
 }

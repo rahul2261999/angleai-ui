@@ -58,6 +58,7 @@ const PasswordField = ({
         id={id}
         type={showPassword ? "text" : "password"}
         placeholder={placeholder}
+        autoComplete="new-password"
         {...register(id as keyof SignupFormData)}
         onFocus={onFocus}
         onBlur={onBlur}
@@ -86,6 +87,7 @@ const EmailField = ({ register, error }: EmailFieldProps) => (
       id="email"
       type="email"
       placeholder="Email"
+      autoComplete="off"
       {...register('email')}
     />
     {error && <ErrorMessage>{error}</ErrorMessage>}
@@ -175,7 +177,7 @@ export const SignupForm = () => {
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
+    <Form onSubmit={handleSubmit} autoComplete="off">
       <EmailField 
         register={register} 
         error={errors.email?.message} 

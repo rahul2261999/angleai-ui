@@ -1,5 +1,5 @@
 export interface BaseResponse<T = null> {
   message: string;
-  statuCode: number,
+  statusCode: number,
   data: T
 }
