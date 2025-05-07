@@ -27,10 +27,10 @@ import {
   PasswordToggleButton
 } from '../styles';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { signinService } from '../../service/auth.service';
 import { useToast } from '@/components/ui/toast';
 import { BaseError } from '@/types/error';
+import { useAuth } from '@/contexts/authContext';
 
 const signinSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -44,9 +44,8 @@ type FormErrors = ReturnType<typeof useForm<SigninFormData>>['formState']['error
 const useSigninForm = () => {
   const [showPassword, setShowPassword] = useState(false);
   const passwordInputRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
   const toast = useToast();
-
+  const { signin } = useAuth();
 
   const {
     register,
@@ -90,9 +89,7 @@ const useSigninForm = () => {
           description: user.message,
         });
 
-        localStorage.setItem('user', JSON.stringify(user.data.user));
-        localStorage.setItem('token', user.data.token);
-        router.replace('/dashboard/analytics');
+        signin(user.data.user, user.data.token);
       }
 
 
@@ -223,7 +220,8 @@ export function SigninForm() {
 
   return (
     <>
-      <SocialLogin />
+    {/* TODO: implement social login later */}
+      {false && <SocialLogin />}
       
       <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
         <EmailInput register={register} errors={errors} />

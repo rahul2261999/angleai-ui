@@ -6,7 +6,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { Bell, User, Settings, LogOut, Search, Menu, Mail, Circle } from 'lucide-react';
 import { typography } from '@/styles/typography';
 import { breakpoints } from '@/styles/breakpoints';
-
+import { useAuth } from '@/contexts/authContext';
 interface NavbarProps {
   onMenuClick: () => void;
 }
@@ -485,6 +485,7 @@ const notifications: Notification[] = [
 ];
 
 const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
+  const { signout } = useAuth();
   return (
     <NavbarContainer>
       <MenuButton onClick={onMenuClick}>
@@ -558,9 +559,9 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick }) => {
                 Settings
               </DropdownItem>
               <Separator />
-              <DropdownItem className="text-red-600">
+              <DropdownItem className="text-red-600" onClick={signout}>
                 <LogOut />
-                Logout
+                Sign Out
               </DropdownItem>
             </ProfileDropdownContent>
           </DropdownMenu.Portal>
