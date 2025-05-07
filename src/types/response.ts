@@ -1,4 +1,4 @@
-export interface RagBaseResponse<T = null> {
+export interface BaseResponse<T = null> {
   message: string;
   statuCode: number,
   data: T

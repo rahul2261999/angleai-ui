@@ -127,4 +127,36 @@ export const LoginLink = styled.div`
       text-decoration: underline;
     }
   }
+`;
+
+export const PasswordInputWrapper = styled.div`
+  position: relative;
+  width: 100%;
+`;
+
+export const VisibilityToggle = styled.button`
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: var(--gray-8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease;
+  width: 24px;
+  height: 24px;
+
+  &:hover {
+    color: var(--gray-11);
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+  }
 `; 

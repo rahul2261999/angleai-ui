@@ -1,12 +1,12 @@
 import { axiosRag } from "@/lib/axiosRag"
 import { CreateKb, KbFolderRes } from "./kb-manager.type"
-import { RagBaseResponse } from "@/types/response";
+import { BaseResponse } from "@/types/response";
 import { BaseError } from "@/types/error";
 import axios from "axios";
 
 export const getAllKb = async (tenantId: string) => {
   try {
-    const res = await axiosRag.get<RagBaseResponse<KbFolderRes[]>>(`/v1/${tenantId}/knowledgebases`);
+    const res = await axiosRag.get<BaseResponse<KbFolderRes[]>>(`/v1/${tenantId}/knowledgebases`);
     return res.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -41,7 +41,7 @@ export const getKbById = async (
   knowledgebaseId: string
 ) => {
   try {
-    const res = await axiosRag.get<RagBaseResponse<KbFolderRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}`);
+    const res = await axiosRag.get<BaseResponse<KbFolderRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}`);
 
     return res.data
   } catch (error) {
@@ -56,7 +56,7 @@ export const createKb = async (
   body: CreateKb
 ) => {
   try {
-    const res = await axiosRag.post<RagBaseResponse<KbFolderRes>>(`/v1/${tenantId}/knowledgebases`, body);
+    const res = await axiosRag.post<BaseResponse<KbFolderRes>>(`/v1/${tenantId}/knowledgebases`, body);
 
     return res.data
   } catch (error) {
@@ -72,7 +72,7 @@ export const updaeKb = async (
   body: Partial<CreateKb>
 ) => {
   try {
-    const res = await axiosRag.patch<RagBaseResponse>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}`, body);
+    const res = await axiosRag.patch<BaseResponse>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}`, body);
 
     return res.data
   } catch (error) {
@@ -87,7 +87,7 @@ export const deleteKbById = async (
   knowledgebaseId: string
 ) => {
   try {
-    const res = await axiosRag.delete<RagBaseResponse>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}`);
+    const res = await axiosRag.delete<BaseResponse>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}`);
 
     return res.data
   } catch (error) {

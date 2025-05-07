@@ -1,75 +1,215 @@
 'use client';
 
+import { useState, useEffect } from 'react';
+import { EyeOpenIcon, EyeClosedIcon } from "@radix-ui/react-icons";
 import { useSignupForm } from '@/features/auth/signup/hooks/useSignupForm';
+import { PasswordRequirements } from './PasswordRequirements';
+import { UseFormRegister, FieldErrors } from 'react-hook-form';
+import { SignupFormData } from '../schemas/signup.schema';
 import {
   Form,
   FormGroup,
   Label,
   Input,
   ErrorMessage,
-  SubmitButton
+  SubmitButton,
+  PasswordInputWrapper,
+  VisibilityToggle
 } from '../styles';
 
+// Types
+interface PasswordFieldProps {
+  id: string;
+  label: string;
+  placeholder: string;
+  register: UseFormRegister<SignupFormData>;
+  error?: string;
+  showPassword: boolean;
+  onToggleVisibility: () => void;
+  onFocus: () => void;
+  onBlur: () => void;
+  watchValue: string;
+  showRequirements?: boolean;
+}
+
+interface EmailFieldProps {
+  register: UseFormRegister<SignupFormData>;
+  error?: string;
+}
+
+// Components
+const PasswordField = ({
+  id,
+  label,
+  placeholder,
+  register,
+  error,
+  showPassword,
+  onToggleVisibility,
+  onFocus,
+  onBlur,
+  watchValue,
+  showRequirements = false
+}: PasswordFieldProps) => (
+  <FormGroup>
+    <Label htmlFor={id}>{label}</Label>
+    <PasswordInputWrapper>
+      <Input
+        id={id}
+        type={showPassword ? "text" : "password"}
+        placeholder={placeholder}
+        {...register(id as keyof SignupFormData)}
+        onFocus={onFocus}
+        onBlur={onBlur}
+      />
+      <VisibilityToggle
+        type="button"
+        onClick={onToggleVisibility}
+      >
+        {showPassword ? <EyeOpenIcon /> : <EyeClosedIcon />}
+      </VisibilityToggle>
+    </PasswordInputWrapper>
+    {showRequirements && (
+      <PasswordRequirements 
+        password={watchValue} 
+        isVisible={showRequirements}
+      />
+    )}
+    {error && <ErrorMessage>{error}</ErrorMessage>}
+  </FormGroup>
+);
+
+const EmailField = ({ register, error }: EmailFieldProps) => (
+  <FormGroup>
+    <Label htmlFor="email">Email</Label>
+    <Input
+      id="email"
+      type="email"
+      placeholder="Email"
+      {...register('email')}
+    />
+    {error && <ErrorMessage>{error}</ErrorMessage>}
+  </FormGroup>
+);
+
+// Custom hooks
+const usePasswordVisibility = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  return {
+    showPassword,
+    showConfirmPassword,
+    togglePassword: () => setShowPassword(prev => !prev),
+    toggleConfirmPassword: () => setShowConfirmPassword(prev => !prev)
+  };
+};
+
+const usePasswordFocus = (errors: FieldErrors<SignupFormData>) => {
+  const [isPasswordFocused, setIsPasswordFocused] = useState(false);
+  const [hasAttemptedSubmit, setHasAttemptedSubmit] = useState(false);
+  const [isAutoFilled, setIsAutoFilled] = useState(false);
+
+  useEffect(() => {
+    const checkAutoFill = () => {
+      const passwordInput = document.getElementById('password') as HTMLInputElement;
+      const isFilled = passwordInput?.matches(':-webkit-autofill') ?? false;
+      setIsAutoFilled(isFilled);
+      if (isFilled) {
+        setIsPasswordFocused(true);
+      }
+    };
+
+    checkAutoFill();
+    const timeoutId = setTimeout(checkAutoFill, 100);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const handleFocus = () => setIsPasswordFocused(true);
+  const handleBlur = () => {
+    if (!errors.password) {
+      setIsPasswordFocused(false);
+    }
+  };
+
+  return {
+    isPasswordFocused,
+    hasAttemptedSubmit,
+    isAutoFilled,
+    setHasAttemptedSubmit,
+    handleFocus,
+    handleBlur
+  };
+};
+
+// Main Component
 export const SignupForm = () => {
   const { form, onSubmit } = useSignupForm();
-  const { register, formState: { errors, isSubmitting } } = form;
+  const { register, formState: { errors, isSubmitting }, watch } = form;
+  const password = watch('password', '');
+  
+  const {
+    showPassword,
+    showConfirmPassword,
+    togglePassword,
+    toggleConfirmPassword
+  } = usePasswordVisibility();
+
+  const {
+    isPasswordFocused,
+    hasAttemptedSubmit,
+    isAutoFilled,
+    setHasAttemptedSubmit,
+    handleFocus,
+    handleBlur
+  } = usePasswordFocus(errors);
+
+  const shouldShowRequirements = 
+    isPasswordFocused || 
+    (hasAttemptedSubmit && Boolean(errors.password)) ||
+    (password.length > 0 && isAutoFilled);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    setHasAttemptedSubmit(true);
+    await onSubmit(e);
+  };
 
   return (
-    <Form onSubmit={onSubmit}>
-      <FormGroup>
-        <Label htmlFor="fullName">User name</Label>
-        <Input
-          id="fullName"
-          type="text"
-          placeholder="User Name"
-          {...register('fullName')}
-        />
-        {errors.fullName && (
-          <ErrorMessage>{errors.fullName.message}</ErrorMessage>
-        )}
-      </FormGroup>
+    <Form onSubmit={handleSubmit}>
+      <EmailField 
+        register={register} 
+        error={errors.email?.message} 
+      />
 
-      <FormGroup>
-        <Label htmlFor="email">Email</Label>
-        <Input
-          id="email"
-          type="email"
-          placeholder="Email"
-          {...register('email')}
-        />
-        {errors.email && (
-          <ErrorMessage>{errors.email.message}</ErrorMessage>
-        )}
-      </FormGroup>
+      <PasswordField
+        id="password"
+        label="Password"
+        placeholder="Password"
+        register={register}
+        error={errors.password?.message}
+        showPassword={showPassword}
+        onToggleVisibility={togglePassword}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        watchValue={password}
+        showRequirements={shouldShowRequirements}
+      />
 
-      <FormGroup>
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Password"
-          {...register('password')}
-        />
-        {errors.password && (
-          <ErrorMessage>{errors.password.message}</ErrorMessage>
-        )}
-      </FormGroup>
-
-      <FormGroup>
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          type="password"
-          placeholder="Confirm Password"
-          {...register('confirmPassword')}
-        />
-        {errors.confirmPassword && (
-          <ErrorMessage>{errors.confirmPassword.message}</ErrorMessage>
-        )}
-      </FormGroup>
+      <PasswordField
+        id="confirmPassword"
+        label="Confirm Password"
+        placeholder="Confirm Password"
+        register={register}
+        error={errors.confirmPassword?.message}
+        showPassword={showConfirmPassword}
+        onToggleVisibility={toggleConfirmPassword}
+        onFocus={() => {}}
+        onBlur={() => {}}
+        watchValue={password}
+      />
 
       <SubmitButton type="submit" disabled={isSubmitting}>
-        Sign Up
+        {isSubmitting ? 'Signing up...' : 'Sign Up'}
       </SubmitButton>
     </Form>
   );

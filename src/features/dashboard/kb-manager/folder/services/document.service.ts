@@ -1,5 +1,5 @@
 import { axiosRag } from "@/lib/axiosRag"
-import { RagBaseResponse } from "@/types/response";
+import { BaseResponse } from "@/types/response";
 import { KbDocumentRes } from "./document.types";
 import { errorHandler } from "@/utils/helper";
 
@@ -11,7 +11,7 @@ export const uploadDocument = async (
   body: FormData
 ) => {
   try {
-    const res = await axiosRag.post<RagBaseResponse<KbDocumentRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document`, body , {
+    const res = await axiosRag.post<BaseResponse<KbDocumentRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document`, body , {
       headers: {
         'Content-Type': 'multipart/form-data'
       }
@@ -26,7 +26,7 @@ export const uploadDocument = async (
 
 export const getAllDocuments = async (tenantId: string, knowledgebaseId: string) => {
   try {
-    const res = await axiosRag.get<RagBaseResponse<KbDocumentRes[]>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document`);
+    const res = await axiosRag.get<BaseResponse<KbDocumentRes[]>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document`);
     
     return res.data;
   } catch (error) {
@@ -40,7 +40,7 @@ export const getDocumentByID = async (
   documentId: string
 ) => {
   try {
-    const res = await axiosRag.get<RagBaseResponse<KbDocumentRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document/${documentId}`);
+    const res = await axiosRag.get<BaseResponse<KbDocumentRes>>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document/${documentId}`);
 
     return res.data
   } catch (error) {
@@ -54,7 +54,7 @@ export const deleteDocumentById = async (
   documentId: string
 ) => {
   try {
-    const res = await axiosRag.delete<RagBaseResponse>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document/${documentId}`);
+    const res = await axiosRag.delete<BaseResponse>(`/v1/${tenantId}/knowledgebases/${knowledgebaseId}/document/${documentId}`);
 
     return res.data
   } catch (error) {
