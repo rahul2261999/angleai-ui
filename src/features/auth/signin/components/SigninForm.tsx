@@ -89,7 +89,7 @@ const useSigninForm = () => {
           description: user.message,
         });
 
-        signin(user.data.user, user.data.token);
+        signin(user.data.user, user.data.otpToken);
       }
 
 

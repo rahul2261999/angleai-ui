@@ -23,8 +23,16 @@ export interface AuthenticatedUser {
 }
 
 export interface SignInResponse {
-  token: string;
+  otpToken: string;
   user: AuthenticatedUser;
 }
 
+export interface VerifyOTPRequest {
+  body: {
+    otp: string;
+  },
+  headers: {
+    otpToken: string;
+  }
+}
 
